@@ -2,6 +2,14 @@ import path from 'path'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
+const vuePlugin = () => vue({
+  template: {
+    compilerOptions: {
+      isCustomElement: (tag) => tag === 'webview'
+    }
+  }
+})
+
 // https://vitejs.dev/config/
 export default defineConfig({
   build: {
@@ -12,14 +20,12 @@ export default defineConfig({
     esbuildOptions: { target: 'esnext' }
   },
   plugins: [
-    vue({
-      template: {
-        compilerOptions: {
-          isCustomElement: (tag) => tag === 'webview'
-        }
-      }
-    })
+    vuePlugin()
   ],
+  worker: {
+    format: 'es',
+    plugins: () => [vuePlugin()]
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

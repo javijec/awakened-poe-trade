@@ -45,6 +45,16 @@ export function measurePriceCheckStage<T> (
   }
 }
 
+export function recordPriceCheckStage (
+  id: number | undefined,
+  stage: Exclude<PriceCheckStage, 'first-paint'>,
+  duration: number
+) {
+  if (id == null) return
+  const profile = profiles.get(id)
+  if (profile) profile.stages[stage] = duration
+}
+
 export function finishPriceCheckProfile (id: number | undefined) {
   if (id == null) return
 

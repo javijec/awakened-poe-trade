@@ -6,16 +6,18 @@ import type { FilterPreset } from './interfaces'
 
 const ROMAN_NUMERALS = ['I', 'II', 'III', 'IV', 'V']
 
+export interface PriceCheckCreateOptions {
+  league: string
+  currency: string | undefined
+  collapseListings: 'app' | 'api'
+  activateStockFilter: boolean
+  searchStatRange: number
+  useEn: boolean
+}
+
 export function createPresets (
   item: ParsedItem,
-  opts: {
-    league: string
-    currency: string | undefined
-    collapseListings: 'app' | 'api'
-    activateStockFilter: boolean
-    searchStatRange: number
-    useEn: boolean
-  }
+  opts: PriceCheckCreateOptions
 ): { presets: FilterPreset[], active: string } {
   if (item.info.refName === 'Expedition Logbook') {
     return {

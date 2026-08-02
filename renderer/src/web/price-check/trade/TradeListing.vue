@@ -255,7 +255,7 @@ export default defineComponent({
           ]
         }
       }),
-      execSearch: () => { search(props.filters, props.stats) },
+      execSearch: () => search(props.filters, props.stats),
       error,
       showSeller: computed(() => widget.value.showSeller),
       makeTradeLink,

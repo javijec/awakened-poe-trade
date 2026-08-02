@@ -12,7 +12,7 @@ import { Host } from './web/background/IPC'
     updateConfig(defaultConfig())
     await Data.init('en')
     const { exposePriceCheckBenchmark } = await import('./web/price-check/benchmark')
-    exposePriceCheckBenchmark()
+    await exposePriceCheckBenchmark()
     return
   }
 

@@ -41,8 +41,9 @@
         <template v-else-if="item?.isOk()">
           <unidentified-resolver :item="item.value" @identify="handleIdentification($event)" />
           <checked-item v-if="isLeagueSelected"
-            :item="item.value" :advanced-check="advancedCheck" :performance-profile-id="performanceProfileId" />
+            :item="item.value" :advanced-check="advancedCheck" :performance-profile-id="performanceProfileId" :prepared="prepared" />
         </template>
+        <div v-else-if="isPreparing" class="m-4 text-gray-400"><i class="fas fa-spinner fa-spin" /></div>
         <div v-if="isBrowserShown" class="bg-gray-900 px-6 py-2 truncate">
           <i18n-t keypath="app.toggle_browser_hint" tag="div">
             <span class="bg-gray-400 text-gray-900 rounded px-1">{{ overlayKey }}</span>
@@ -86,7 +87,9 @@ import CheckPositionCircle from './CheckPositionCircle.vue'
 import AppTitleBar from '@/web/ui/AppTitlebar.vue'
 import ItemQuickPrice from '@/web/ui/ItemQuickPrice.vue'
 import { PriceCheckWidget, WidgetManager, WidgetSpec } from '../overlay/interfaces'
-import { beginPriceCheckProfile, measurePriceCheckStage } from './performance'
+import { preparePriceCheck } from './worker-client'
+import type { PreparedPriceCheck } from './worker-protocol'
+import { beginPriceCheckProfile, measurePriceCheckStage, recordPriceCheckStage } from './performance'
 
 type ParseError = { name: string; message: string; rawText: ParsedItem['rawText'] }
 
@@ -149,8 +152,11 @@ export default defineComponent({
 
     const item = shallowRef<null | Result<ParsedItem, ParseError>>(null)
     const performanceProfileId = shallowRef<number | undefined>()
+    const prepared = shallowRef<PreparedPriceCheck | undefined>()
+    const isPreparing = shallowRef(false)
     const advancedCheck = shallowRef(false)
     const checkPosition = shallowRef({ x: 1, y: 1 })
+    let latestRequest = 0
 
     MainProcess.onEvent('MAIN->CLIENT::item-text', (e) => {
       if (e.target !== 'price-check') return
@@ -182,20 +188,51 @@ export default defineComponent({
       checkPosition.value = e.position
       advancedCheck.value = e.focusOverlay
       performanceProfileId.value = beginPriceCheckProfile('item-text')
+      prepared.value = undefined
+      const request = ++latestRequest
 
-      item.value = measurePriceCheckStage(performanceProfileId.value, 'parse', () =>
-        (e.item ? ok(e.item as ParsedItem) : parseClipboard(e.clipboard)))
-        .andThen(item => (
-          (item.category === ItemCategory.Sentinel && item.rarity !== ItemRarity.Unique))
-          ? err('item.unknown')
-          : ok(item))
-        .mapErr(err => ({
-          name: `${err}`,
-          message: `${err}_help`,
-          rawText: e.clipboard
-        }))
+      const setItem = (parsed: Result<ParsedItem, string>) => {
+        item.value = parsed
+          .andThen(item => (
+            (item.category === ItemCategory.Sentinel && item.rarity !== ItemRarity.Unique))
+            ? err('item.unknown')
+            : ok(item))
+          .mapErr(err => ({
+            name: `${err}`,
+            message: `${err}_help`,
+            rawText: e.clipboard
+          }))
+      }
 
-      if (item.value.isOk()) {
+      if (e.item) {
+        isPreparing.value = false
+        setItem(ok(e.item as ParsedItem))
+      } else {
+        isPreparing.value = true
+        item.value = null
+        preparePriceCheck(e.clipboard, AppConfig().language, {
+          league: leagues.selectedId.value ?? 'Standard',
+          collapseListings: props.config.collapseListings,
+          activateStockFilter: props.config.activateStockFilter,
+          searchStatRange: props.config.searchStatRange,
+          useEn: AppConfig().useIntlSite,
+          currency: undefined
+        }).then(value => {
+          if (request !== latestRequest) return
+          recordPriceCheckStage(performanceProfileId.value, 'parse', value.timings.parse)
+          recordPriceCheckStage(performanceProfileId.value, 'presets', value.timings.presets)
+          prepared.value = value
+          setItem(ok(value.item))
+          queuePricesFetch()
+        }).catch(() => {
+          if (request !== latestRequest) return
+          setItem(measurePriceCheckStage(performanceProfileId.value, 'parse', () => parseClipboard(e.clipboard)))
+        }).finally(() => {
+          if (request === latestRequest) isPreparing.value = false
+        })
+      }
+
+      if (e.item) {
         queuePricesFetch()
       }
     })
@@ -293,6 +330,8 @@ export default defineComponent({
       item,
       advancedCheck,
       performanceProfileId,
+      prepared,
+      isPreparing,
       handleIdentification,
       overlayKey,
       isLeagueSelected,

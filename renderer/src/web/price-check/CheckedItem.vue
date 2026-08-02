@@ -67,6 +67,7 @@ import { FilterPreset } from './filters/interfaces'
 import { PriceCheckWidget } from '../overlay/interfaces'
 import { useLeagues } from '@/web/background/Leagues'
 import { finishPriceCheckProfile, measurePriceCheckStage } from './performance'
+import type { PreparedPriceCheck } from './worker-protocol'
 
 let _showSupportLinksCounter = 0
 
@@ -94,6 +95,10 @@ export default defineComponent({
     performanceProfileId: {
       type: Number,
       required: false
+    },
+    prepared: {
+      type: Object as PropType<PreparedPriceCheck>,
+      required: false
     }
   },
   setup (props) {
@@ -114,7 +119,8 @@ export default defineComponent({
     watch(() => props.item, (item, prevItem) => {
       const prevCurrency = (presets.value != null) ? itemFilters.value.trade.currency : undefined
 
-      presets.value = measurePriceCheckStage(props.performanceProfileId, 'presets', () => createPresets(item, {
+      const workerPrepared = (props.prepared?.item.rawText === item.rawText) ? props.prepared : undefined
+      presets.value = workerPrepared ?? measurePriceCheckStage(props.performanceProfileId, 'presets', () => createPresets(item, {
         league: leagues.selectedId.value!,
         collapseListings: widget.value.collapseListings,
         activateStockFilter: widget.value.activateStockFilter,

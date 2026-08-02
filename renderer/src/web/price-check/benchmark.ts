@@ -2,6 +2,7 @@ import { parseClipboard } from '@/parser'
 import { createPresets } from './filters/create-presets'
 import { createTradeRequest } from './trade/pathofexile-trade'
 import { PRICE_CHECK_BENCHMARK_FIXTURES } from './benchmark-fixtures'
+import { preparePriceCheck } from './worker-client'
 
 export interface PriceCheckBenchmarkSummary {
   average: number
@@ -104,13 +105,23 @@ export function runPriceCheckBenchmark (iterations = 100): PriceCheckBenchmarkRe
 declare global {
   interface Window {
     __AWAKENED_PRICE_CHECK_BENCHMARK__?: PriceCheckBenchmarkReport
+    __AWAKENED_PRICE_CHECK_WORKER_SMOKE__?: { presets: number } | { error: string }
   }
 }
 
-export function exposePriceCheckBenchmark () {
+export async function exposePriceCheckBenchmark () {
   const report = runPriceCheckBenchmark()
   window.__AWAKENED_PRICE_CHECK_BENCHMARK__ = report
+  try {
+    const prepared = await preparePriceCheck(PRICE_CHECK_BENCHMARK_FIXTURES[0].clipboard, 'en', options)
+    window.__AWAKENED_PRICE_CHECK_WORKER_SMOKE__ = {
+      presets: prepared.presets.length
+    }
+  } catch (error) {
+    window.__AWAKENED_PRICE_CHECK_WORKER_SMOKE__ = { error: (error as Error).message }
+  }
   document.documentElement.dataset.priceCheckBenchmark = JSON.stringify(report)
+  document.documentElement.dataset.priceCheckWorkerSmoke = JSON.stringify(window.__AWAKENED_PRICE_CHECK_WORKER_SMOKE__)
   console.table(Object.entries(report.stages).map(([stage, summary]) => ({ stage, ...summary })))
   window.dispatchEvent(new CustomEvent('awakened:price-check-benchmark', { detail: report }))
   return report
