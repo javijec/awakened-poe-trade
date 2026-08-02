@@ -66,6 +66,7 @@ import { AppConfig } from '@/web/Config'
 import { FilterPreset } from './filters/interfaces'
 import { PriceCheckWidget } from '../overlay/interfaces'
 import { useLeagues } from '@/web/background/Leagues'
+import { finishPriceCheckProfile, measurePriceCheckStage } from './performance'
 
 let _showSupportLinksCounter = 0
 
@@ -89,6 +90,10 @@ export default defineComponent({
     advancedCheck: {
       type: Boolean,
       required: true
+    },
+    performanceProfileId: {
+      type: Number,
+      required: false
     }
   },
   setup (props) {
@@ -109,7 +114,7 @@ export default defineComponent({
     watch(() => props.item, (item, prevItem) => {
       const prevCurrency = (presets.value != null) ? itemFilters.value.trade.currency : undefined
 
-      presets.value = createPresets(item, {
+      presets.value = measurePriceCheckStage(props.performanceProfileId, 'presets', () => createPresets(item, {
         league: leagues.selectedId.value!,
         collapseListings: widget.value.collapseListings,
         activateStockFilter: widget.value.activateStockFilter,
@@ -119,7 +124,7 @@ export default defineComponent({
           item.info.namespace === prevItem.info.namespace &&
           item.info.refName === prevItem.info.refName
         ) ? prevCurrency : undefined
-      })
+      }))
 
       if ((!props.advancedCheck && !widget.value.smartInitialSearch) ||
           (props.advancedCheck && !widget.value.lockedInitialSearch)) {
@@ -140,6 +145,7 @@ export default defineComponent({
       }
 
       tradeAPI.value = apiToSatisfySearch(props.item, itemStats.value, itemFilters.value)
+      finishPriceCheckProfile(props.performanceProfileId)
     }, { immediate: true })
 
     watch(() => [props.item, doSearch.value], () => {

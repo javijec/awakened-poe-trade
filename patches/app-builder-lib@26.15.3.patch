@@ -1,0 +1,15 @@
+diff --git a/out/targets/appimage/appImageUtil.js b/out/targets/appimage/appImageUtil.js
+index 12f078abd42700857b239b0e53cd568c1b1836b7..088d9d13dbdbbfa0388339dc776a307d9e3c2ea2 100644
+--- a/out/targets/appimage/appImageUtil.js
++++ b/out/targets/appimage/appImageUtil.js
+@@ -170,8 +170,8 @@ set -e
+ 
+ THIS="$0"
+ # http://stackoverflow.com/questions/3190818/
+-args=("$@")
+-NUMBER_OF_ARGS="$#"
++args=("$@" "--ozone-platform=x11")
++NUMBER_OF_ARGS="\${#args[@]}"
+ 
+ if [ -z "$APPDIR" ] ; then
+   # Find the AppDir. It is the directory that contains AppRun.

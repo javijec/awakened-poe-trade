@@ -1,0 +1,11 @@
+{
+  "name": "awakened-poe-trade-workspace",
+  "private": true,
+  "packageManager": "pnpm@11.3.0",
+  "scripts": {
+    "build": "pnpm -r build",
+    "lint": "pnpm --dir renderer lint",
+    "make-index-files": "pnpm --dir renderer make-index-files",
+    "benchmark:price-check": "pnpm --dir renderer benchmark:price-check"
+  }
+}

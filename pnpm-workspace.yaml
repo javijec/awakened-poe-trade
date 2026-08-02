@@ -1,0 +1,13 @@
+packages:
+  - main
+  - renderer
+allowBuilds:
+  electron: true
+  electron-overlay-window: true
+  electron-winstaller: true
+  esbuild: true
+  uiohook-napi: true
+  unrs-resolver: true
+  vue-demi: true
+patchedDependencies:
+  app-builder-lib@26.15.3: patches/app-builder-lib@26.15.3.patch

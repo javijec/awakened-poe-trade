@@ -41,7 +41,7 @@
         <template v-else-if="item?.isOk()">
           <unidentified-resolver :item="item.value" @identify="handleIdentification($event)" />
           <checked-item v-if="isLeagueSelected"
-            :item="item.value" :advanced-check="advancedCheck" />
+            :item="item.value" :advanced-check="advancedCheck" :performance-profile-id="performanceProfileId" />
         </template>
         <div v-if="isBrowserShown" class="bg-gray-900 px-6 py-2 truncate">
           <i18n-t keypath="app.toggle_browser_hint" tag="div">
@@ -86,6 +86,7 @@ import CheckPositionCircle from './CheckPositionCircle.vue'
 import AppTitleBar from '@/web/ui/AppTitlebar.vue'
 import ItemQuickPrice from '@/web/ui/ItemQuickPrice.vue'
 import { PriceCheckWidget, WidgetManager, WidgetSpec } from '../overlay/interfaces'
+import { beginPriceCheckProfile, measurePriceCheckStage } from './performance'
 
 type ParseError = { name: string; message: string; rawText: ParsedItem['rawText'] }
 
@@ -147,6 +148,7 @@ export default defineComponent({
     })
 
     const item = shallowRef<null | Result<ParsedItem, ParseError>>(null)
+    const performanceProfileId = shallowRef<number | undefined>()
     const advancedCheck = shallowRef(false)
     const checkPosition = shallowRef({ x: 1, y: 1 })
 
@@ -179,8 +181,10 @@ export default defineComponent({
       wm.show(props.config.wmId)
       checkPosition.value = e.position
       advancedCheck.value = e.focusOverlay
+      performanceProfileId.value = beginPriceCheckProfile('item-text')
 
-      item.value = (e.item ? ok(e.item as ParsedItem) : parseClipboard(e.clipboard))
+      item.value = measurePriceCheckStage(performanceProfileId.value, 'parse', () =>
+        (e.item ? ok(e.item as ParsedItem) : parseClipboard(e.clipboard)))
         .andThen(item => (
           (item.category === ItemCategory.Sentinel && item.rarity !== ItemRarity.Unique))
           ? err('item.unknown')
@@ -288,6 +292,7 @@ export default defineComponent({
       checkPosition,
       item,
       advancedCheck,
+      performanceProfileId,
       handleIdentification,
       overlayKey,
       isLeagueSelected,
