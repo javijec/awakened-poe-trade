@@ -19,9 +19,11 @@ const emit = defineEmits<{
 
 <style lang="postcss" module>
 .titlebar {
-  color: rgba(238, 238, 238, .58);
-  background: #0d0d0d;
-  border-bottom: 1px solid rgba(163, 141, 109, .18);
+  color: #d6bd83;
+  background: linear-gradient(180deg, #302310, #120e09 74%, #080705);
+  border: 1px solid #604822;
+  border-bottom-color: #8b6630;
+  box-shadow: inset 0 1px 0 rgba(255, 226, 157, .17), inset 0 -1px 0 rgba(0, 0, 0, .72);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -34,13 +36,13 @@ const emit = defineEmits<{
     letter-spacing: .04em;
 
     &:hover {
-      color: #eee;
-      background: rgba(238, 238, 238, .06);
+      color: #fff0bd;
+      background: rgba(185, 149, 82, .14);
     }
 
     &.close:hover {
-      color: #eee;
-      background: rgba(109, 28, 28, .72);
+      color: #ffe3c4;
+      background: linear-gradient(#713427, #30120e);
     }
   }
 }

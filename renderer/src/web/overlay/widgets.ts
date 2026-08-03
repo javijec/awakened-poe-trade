@@ -51,6 +51,8 @@ export interface PriceCheckWidget extends Widget {
   requestPricePrediction: boolean
   builtinBrowser: boolean
   rememberCurrency: boolean
+  // null represents the explicit "Any Currency" selection.
+  rememberedCurrency: string | null
 }
 
 export interface StopwatchWidget extends Widget {

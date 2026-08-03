@@ -13,6 +13,7 @@ export interface PriceCheckCreateOptions {
   activateStockFilter: boolean
   searchStatRange: number
   useEn: boolean
+  rememberCurrency?: boolean
 }
 
 export function createPresets (

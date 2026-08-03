@@ -8,6 +8,20 @@
   "realm": "Realm",
   "realm_intl": "International",
 
+  "rate_limits": {
+    "name": "Rate limits",
+    "limited": "Rate limited",
+    "title": "Trade request limits",
+    "available": "Available",
+    "waiting": "Waiting in queue",
+    "searches": "Searches",
+    "exchange": "Exchange",
+    "listings": "Listings",
+    "requests": "{active} / {max} requests",
+    "seconds": "{value}s",
+    "queued": "{value} queued"
+  },
+
   "app": {
     "leagues_loading": "Loading leagues\u2026",
     "leagues_failed": "Failed to load leagues",

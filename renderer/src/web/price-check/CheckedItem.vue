@@ -122,10 +122,13 @@ export default defineComponent({
         activateStockFilter: widget.value.activateStockFilter,
         searchStatRange: widget.value.searchStatRange,
         useEn: AppConfig().useIntlSite,
-        currency: (prevItem &&
-          item.info.namespace === prevItem.info.namespace &&
-          item.info.refName === prevItem.info.refName
-        ) ? prevCurrency : undefined
+        currency: widget.value.rememberCurrency
+          ? widget.value.rememberedCurrency ?? undefined
+          : (prevItem &&
+              item.info.namespace === prevItem.info.namespace &&
+              item.info.refName === prevItem.info.refName
+            ) ? prevCurrency : undefined,
+        rememberCurrency: widget.value.rememberCurrency
       }))
 
       if ((!props.advancedCheck && !widget.value.smartInitialSearch) ||

@@ -97,16 +97,16 @@ export default defineComponent({
 }
 
 .tippy-box[data-theme~='poe'] {
-  border: 1px solid rgba(163, 141, 109, .42);
-  border-radius: 5px;
-  background: #0d0d0d;
-  color: rgba(225, 215, 190, .92);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, .52);
+  border: 1px solid #75582c;
+  border-radius: 2px;
+  background: linear-gradient(135deg, rgba(207, 164, 79, .1), transparent 42%), linear-gradient(180deg, #1c1710, #0b0907);
+  color: #e3d2ad;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .72), inset 0 1px 0 rgba(255, 227, 157, .13), 0 10px 28px rgba(0, 0, 0, .62);
 }
 
-.tippy-box[data-theme~='poe'] > .tippy-arrow { color: #0d0d0d; }
-.tippy-box[data-theme~='poe'][data-placement^='top'] > .tippy-arrow::before { border-top-color: rgba(163, 141, 109, .42); }
-.tippy-box[data-theme~='poe'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: rgba(163, 141, 109, .42); }
-.tippy-box[data-theme~='poe'][data-placement^='left'] > .tippy-arrow::before { border-left-color: rgba(163, 141, 109, .42); }
-.tippy-box[data-theme~='poe'][data-placement^='right'] > .tippy-arrow::before { border-right-color: rgba(163, 141, 109, .42); }
+.tippy-box[data-theme~='poe'] > .tippy-arrow { color: #1c1710; }
+.tippy-box[data-theme~='poe'][data-placement^='top'] > .tippy-arrow::before { border-top-color: #75582c; }
+.tippy-box[data-theme~='poe'][data-placement^='bottom'] > .tippy-arrow::before { border-bottom-color: #75582c; }
+.tippy-box[data-theme~='poe'][data-placement^='left'] > .tippy-arrow::before { border-left-color: #75582c; }
+.tippy-box[data-theme~='poe'][data-placement^='right'] > .tippy-arrow::before { border-right-color: #75582c; }
 </style>

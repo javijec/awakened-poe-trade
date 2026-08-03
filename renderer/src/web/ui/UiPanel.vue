@@ -19,6 +19,6 @@ export default defineComponent({
 </script>
 
 <style lang="postcss" module>
-.warning { @apply border-yellow-900; }
-.info { @apply border-blue-900; }
+.warning { border-color: #8d5829; }
+.info { border-color: #4a6582; }
 </style>

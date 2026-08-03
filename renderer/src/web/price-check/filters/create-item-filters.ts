@@ -12,6 +12,7 @@ export const SPECIAL_SUPPORT_GEM = ['Empower Support', 'Enlighten Support', 'Enh
 interface CreateOptions {
   league: string
   currency: string | undefined
+  rememberCurrency?: boolean
   collapseListings: 'app' | 'api'
   activateStockFilter: boolean
   exact: boolean
@@ -38,7 +39,7 @@ export function createFilters (
     }
   }
 
-  if (!opts.currency) {
+  if (!opts.currency && !opts.rememberCurrency) {
     if ((!item.info.craftable || CONSUMABLE_CRAFTABLE_ITEM.has(item.category!)) &&
       item.rarity !== ItemRarity.Unique
     ) {

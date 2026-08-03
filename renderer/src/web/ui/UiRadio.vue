@@ -43,5 +43,9 @@ export default defineComponent({
   @apply gap-x-1;
   align-items: baseline;
   text-align: left;
+  color: #dfd3b6;
+
+  & i { color: #c79a4b; text-shadow: 0 1px 1px #000; }
+  &:hover { color: #fff0c6; }
 }
 </style>

@@ -123,17 +123,13 @@ export interface Config {
 }
 
 export const defaultConfig = (): Config => ({
-  configVersion: 18,
+  configVersion: 20,
   overlayKey: 'Shift + Space',
   overlayBackground: 'rgba(129, 139, 149, 0.15)',
   overlayBackgroundClose: true,
   restoreClipboard: false,
   showAttachNotification: true,
   commands: [{
-    text: '/hideout',
-    hotkey: 'F5',
-    send: true
-  }, {
     text: '/exit',
     hotkey: 'F9',
     send: true
@@ -431,6 +427,27 @@ function upgradeConfig (_config: Config): Config {
     config.useIntlSite = (config.language === 'cmn-Hant' && config.realm === 'pc-ggg')
 
     config.configVersion = 18
+  }
+
+  if (config.configVersion < 19) {
+    const priceCheck = config.widgets.find(w => w.wmType === 'price-check') as widget.PriceCheckWidget
+    priceCheck.rememberedCurrency = 'chaos_divine'
+
+    // PoE now provides a native Hideout shortcut. Remove only the historical
+    // default command, leaving any user-defined F5 command untouched.
+    config.commands = config.commands.filter(command => !(
+      command.text === '/hideout' &&
+      command.hotkey === 'F5' &&
+      command.send === true
+    ))
+
+    config.configVersion = 19
+  }
+
+  if (config.configVersion < 20) {
+    const priceCheck = config.widgets.find(w => w.wmType === 'price-check') as widget.PriceCheckWidget
+    priceCheck.rememberedCurrency ??= 'chaos_divine'
+    config.configVersion = 20
   }
   /* eslint-enable */
 

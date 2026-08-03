@@ -1,4 +1,17 @@
 {
+  "rate_limits": {
+    "name": "Лимиты запросов",
+    "limited": "Лимит запросов",
+    "title": "Лимиты запросов Trade",
+    "available": "Доступно",
+    "waiting": "Ожидание в очереди",
+    "searches": "Поиски",
+    "exchange": "Обмен",
+    "listings": "Лоты",
+    "requests": "{active} / {max} запросов",
+    "seconds": "{value} с",
+    "queued": "в очереди: {value}"
+  },
   "Add": "Добавить",
   "Retry": "Повторить",
   "Offline": "Офлайн",

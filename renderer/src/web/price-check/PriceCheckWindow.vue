@@ -127,7 +127,8 @@ export default defineComponent({
         searchStatRange: 10,
         showCursor: true,
         requestPricePrediction: false,
-        rememberCurrency: false
+        rememberCurrency: false,
+        rememberedCurrency: 'chaos_divine'
       }
     }
   } satisfies WidgetSpec,
@@ -229,7 +230,10 @@ export default defineComponent({
           activateStockFilter: props.config.activateStockFilter,
           searchStatRange: props.config.searchStatRange,
           useEn: AppConfig().useIntlSite,
-          currency: undefined
+          currency: props.config.rememberCurrency
+            ? props.config.rememberedCurrency ?? undefined
+            : undefined,
+          rememberCurrency: props.config.rememberCurrency
         }).then(value => {
           if (request !== latestRequest) return
           recordPriceCheckStage(performanceProfileId.value, 'parse', value.timings.parse)

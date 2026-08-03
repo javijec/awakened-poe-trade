@@ -46,13 +46,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue'
+import { defineComponent, PropType, watch } from 'vue'
 import { useI18nNs } from '@/web/i18n'
 import UiRadio from '@/web/ui/UiRadio.vue'
 import UiToggle from '@/web/ui/UiToggle.vue'
 import UiPopover from '@/web/ui/Popover.vue'
 import type { ItemFilters } from '../filters/interfaces'
 import { useLeagues } from '@/web/background/Leagues'
+import { AppConfig } from '@/web/Config'
+import type { PriceCheckWidget } from '@/web/overlay/interfaces'
 
 export default defineComponent({
   components: { UiRadio, UiToggle, UiPopover },
@@ -73,6 +75,13 @@ export default defineComponent({
   setup (props) {
     const leagues = useLeagues()
     const { t } = useI18nNs('online_filter')
+
+    watch(() => props.filters.trade.currency, (currency) => {
+      const priceCheck = AppConfig<PriceCheckWidget>('price-check')
+      if (priceCheck?.rememberCurrency) {
+        priceCheck.rememberedCurrency = currency ?? null
+      }
+    })
 
     return {
       t,

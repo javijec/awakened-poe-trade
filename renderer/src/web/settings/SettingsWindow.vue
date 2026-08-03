@@ -98,6 +98,9 @@ export default defineComponent({
     const selectedComponent = shallowRef<Component>(SettingsHotkeys)
 
     const configClone = shallowRef<Config | null>(null)
+    // Settings may be mounted after the widget has already been requested.
+    // Run this once immediately as well as on later transitions so the pages
+    // never render without their configuration model.
     watch(() => props.config.wmWants, (wmWants) => {
       if (wmWants === 'show') {
         configClone.value = reactive(JSON.parse(JSON.stringify(AppConfig())))
@@ -108,7 +111,7 @@ export default defineComponent({
           selectedComponent.value = SettingsHotkeys
         }
       }
-    })
+    }, { immediate: true })
 
     const selectedWmId = shallowRef<number | null>(null)
     const configWidget = computed(() => configClone.value?.widgets.find(w => w.wmId === selectedWmId.value))
@@ -247,46 +250,50 @@ function menuIcon (component: Component) {
 }
 
 .sidebar {
-  background: #0d0d0d;
-  border-right: 1px solid rgba(163, 141, 109, .16);
+  background: linear-gradient(90deg, #090806, #16120c);
+  border-right: 1px solid #5d4523;
+  box-shadow: inset -1px 0 0 rgba(255, 223, 150, .08);
 }
 
-.content { background: #050505; }
-.contentBody { background: #050505; }
+.content { background: #0a0907; }
+.contentBody { background: linear-gradient(135deg, rgba(185, 149, 82, .05), transparent 36%), #0a0907; }
 .contentHeader {
-  border-bottom: 1px solid rgba(163, 141, 109, .16);
-  background: rgba(238, 238, 238, .02);
+  border-bottom: 1px solid #5d4523;
+  background: linear-gradient(180deg, rgba(255, 225, 154, .08), rgba(29, 23, 14, .82));
 }
 .footer {
-  border-top: 1px solid rgba(163, 141, 109, .16);
-  background: #0d0d0d;
+  border-top: 1px solid #5d4523;
+  background: linear-gradient(#18130c, #0a0806);
 }
 
 .menu-item {
   text-align: left;
   @apply p-2;
   line-height: 1;
-  @apply text-gray-500;
-  @apply rounded-l;
+  color: #a99a7b;
   border-left: 2px solid transparent;
+  border-bottom: 1px solid rgba(185, 149, 82, .08);
   font-family: FontinSmallCaps, FrizQuadrataC;
   letter-spacing: .04em;
 
   &:hover {
-    @apply text-yellow-100 bg-gray-800;
+    color: #f5dc9e;
+    background: linear-gradient(90deg, rgba(173, 127, 49, .22), transparent);
   }
 
   &.active {
-    @apply text-yellow-100;
-    background: rgba(238, 238, 238, .04);
-    border-left-color: #a38d6d;
+    color: #ffe8a8;
+    background: linear-gradient(90deg, rgba(173, 127, 49, .32), rgba(66, 46, 21, .14));
+    border-left-color: #d0a457;
+    box-shadow: inset 0 1px 0 rgba(255, 232, 172, .09), inset 0 -1px 0 rgba(0, 0, 0, .42);
   }
 }
 
 .quit-btn {
-  @apply text-gray-600;
-  @apply border border-gray-800;
+  color: #a99a7b;
+  border: 1px solid #5d4523;
   @apply p-1 mt-2 mr-2 rounded;
+  background: linear-gradient(#1b150d, #0b0906);
 
   &:hover {
     @apply text-red-400;

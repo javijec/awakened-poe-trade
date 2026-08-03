@@ -6,6 +6,20 @@
   "seconds": "초",
   "league": "리그",
 
+  "rate_limits": {
+    "name": "요청 제한",
+    "limited": "요청 제한됨",
+    "title": "거래 요청 제한",
+    "available": "사용 가능",
+    "waiting": "대기열에서 대기 중",
+    "searches": "검색",
+    "exchange": "교환",
+    "listings": "목록",
+    "requests": "{active} / {max} 요청",
+    "seconds": "{value}초",
+    "queued": "{value}개 대기"
+  },
+
   "app": {
     "leagues_loading": "리그를 불러오는 중\u2026",
     "leagues_failed": "리그 불러오기를 실패하였습니다",
