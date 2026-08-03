@@ -1,9 +1,13 @@
 import fnv1a from '@sindresorhus/fnv1a'
+import { shallowRef } from 'vue'
 import type { BaseType, DropEntry, Stat, StatOrGroup, StatMatcher, TranslationDict } from './interfaces'
 
 export * from './interfaces'
 
 export let ITEM_DROP: DropEntry[]
+// The overlay uses this to avoid mounting visible widgets against partially
+// initialized item data during the first startup.
+export const isInitialDataReady = shallowRef(false)
 export let CLIENT_STRINGS: TranslationDict
 export let CLIENT_STRINGS_REF: TranslationDict
 
@@ -212,6 +216,7 @@ export async function init (lang: string) {
     }
   }
   DELAYED_STAT_VALIDATION.clear()
+  isInitialDataReady.value = true
 }
 
 export async function loadForLang (lang: string) {

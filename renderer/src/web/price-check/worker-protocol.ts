@@ -11,6 +11,7 @@ export interface PreparedPriceCheck {
 
 export type PriceCheckWorkerRequest =
   | { type: 'prepare', id: number, clipboard: string, language: string, options: PriceCheckCreateOptions }
+  | { type: 'warm', language: string }
 
 export type PriceCheckWorkerResponse =
   | { type: 'prepared', id: number, value: PreparedPriceCheck }

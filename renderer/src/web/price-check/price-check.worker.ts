@@ -17,6 +17,8 @@ self.onmessage = async (event: MessageEvent<PriceCheckWorkerRequest>) => {
   const request = event.data
   try {
     await ensureData(request.language)
+    if (request.type === 'warm') return
+
     const parseStartedAt = performance.now()
     const parsed = parseClipboard(request.clipboard)
     const parse = performance.now() - parseStartedAt
@@ -38,6 +40,9 @@ self.onmessage = async (event: MessageEvent<PriceCheckWorkerRequest>) => {
     }
     self.postMessage(response)
   } catch (error) {
-    self.postMessage({ type: 'error', id: request.id, message: (error as Error).message } satisfies PriceCheckWorkerResponse)
+    // A warm-up failure is non-fatal and has no caller waiting for a response.
+    if (request.type === 'prepare') {
+      self.postMessage({ type: 'error', id: request.id, message: (error as Error).message } satisfies PriceCheckWorkerResponse)
+    }
   }
 }

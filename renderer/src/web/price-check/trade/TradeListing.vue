@@ -119,23 +119,20 @@ function useTradeApi () {
 
   const groupedResults = computed(() => {
     const out: Array<PricingResult & { listedTimes: number }> = []
+    const byAccountAndPrice = new Map<string, PricingResult & { listedTimes: number }>()
     for (const result of fetchResults.value) {
       if (result == null) break
       if (out.length === 0 || result.hasFee) {
-        out.push({ listedTimes: 1, ...result })
+        const added = { listedTimes: 1, ...result }
+        out.push(added)
+        byAccountAndPrice.set(`${result.accountName}\u0000${result.priceCurrency}\u0000${result.priceAmount}`, added)
         continue
       }
-      const existingRes = out.find((added, idx) =>
-        (
-          added.accountName === result.accountName &&
-          added.priceCurrency === result.priceCurrency &&
-          added.priceAmount === result.priceAmount
-        ) ||
-        (
-          added.accountName === result.accountName &&
-          (out.length - idx) <= 2 // last or prev
-        )
-      )
+      const priceKey = `${result.accountName}\u0000${result.priceCurrency}\u0000${result.priceAmount}`
+      const recent = out.length > 1
+        ? [out[out.length - 1], out[out.length - 2]].find(added => added?.accountName === result.accountName)
+        : out[0]?.accountName === result.accountName ? out[0] : undefined
+      const existingRes = byAccountAndPrice.get(priceKey) ?? recent
       if (existingRes) {
         if (existingRes.stackSize) {
           existingRes.stackSize += result.stackSize!
@@ -143,7 +140,9 @@ function useTradeApi () {
           existingRes.listedTimes += 1
         }
       } else {
-        out.push({ listedTimes: 1, ...result })
+        const added = { listedTimes: 1, ...result }
+        out.push(added)
+        byAccountAndPrice.set(priceKey, added)
       }
     }
     return out

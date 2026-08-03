@@ -7,6 +7,7 @@
       @click="handleBackgroundClick"></div>
     <template v-for="widget of widgets" :key="widget.wmId">
       <component
+        v-if="initialDataReady && isMounted(widget)"
         v-show="isVisible(widget.wmId)"
         :config="widget"
         :id="`widget-${widget.wmId}`"
@@ -16,7 +17,7 @@
       class="widget-default-style p-4 mx-auto mt-6 overflow-hidden"
       style="max-width: 38rem; z-index: 999; position: absolute; left: 0; right: 0;"
     >{{ logs }}</pre>
-    <loading-animation />
+    <loading-animation v-if="initialDataReady" />
     <div v-if="showEditingNotification"
       class="widget-default-style p-6 bg-blue-600 mx-auto text-center text-base mt-6"
       style="min-width: 30rem; z-index: 998; width: fit-content; position: absolute; left: 0; right: 0;">
@@ -42,6 +43,7 @@ import LoadingAnimation from './LoadingAnimation.vue'
 import { usePoeninja } from '@/web/background/Prices'
 import { useLeagues } from '@/web/background/Leagues'
 import { handleLine } from '@/web/client-log/client-log'
+import { isInitialDataReady } from '@/assets/data'
 
 type WMID = Widget['wmId']
 
@@ -72,6 +74,29 @@ export default defineComponent({
         AppConfig().widgets = value
       }
     })
+
+    // These widgets have no global shortcut/event that needs an eagerly
+    // registered component. Delaying their first mount removes their setup
+    // work from overlay startup while keeping them alive after first use.
+    const deferredWidgetTypes = new Set([
+      'settings', 'timer', 'stash-search', 'image-strip', 'delve-grid'
+    ])
+    const mountedWidgetIds = shallowRef(new Set(
+      widgets.value
+        .filter(widget => widget.wmWants === 'show' || !deferredWidgetTypes.has(widget.wmType))
+        .map(widget => widget.wmId)
+    ))
+
+    function mountWidget (wmId: WMID) {
+      if (mountedWidgetIds.value.has(wmId)) return
+      mountedWidgetIds.value = new Set([...mountedWidgetIds.value, wmId])
+    }
+
+    watch(() => widgets.value
+      .filter(widget => widget.wmWants === 'show')
+      .map(widget => widget.wmId), (visibleIds) => {
+      for (const wmId of visibleIds) mountWidget(wmId)
+    }, { immediate: true })
 
     window.addEventListener('blur', () => {
       nextTick(() => { saveConfig() })
@@ -143,6 +168,7 @@ export default defineComponent({
     })()
 
     function show (wmId: WMID) {
+      mountWidget(wmId)
       bringToTop(wmId)
       const topmostWidget = topmostOrExclusiveWidget.value
       if (topmostWidget.wmZorder === 'exclusive') {
@@ -274,6 +300,10 @@ export default defineComponent({
         .isVisible
     }
 
+    function isMounted (widget: Widget): boolean {
+      return mountedWidgetIds.value.has(widget.wmId)
+    }
+
     document.addEventListener('click', (e) => {
       if (e.target instanceof HTMLInputElement && e.target.type === 'file') {
         showEditingNotification.value = true
@@ -298,10 +328,12 @@ export default defineComponent({
       widgets: computed(() => AppConfig().widgets),
       handleBackgroundClick,
       isVisible,
+      isMounted,
       overlayKey: computed(() => AppConfig().overlayKey),
       get showLogs () { return !active.value && AppConfig().logKeys },
       logs: computed(() => sliceLastLines(Host.logs.value, 11)),
       showEditingNotification: computed(() => !active.value && showEditingNotification.value),
+      initialDataReady: isInitialDataReady,
       registry
     }
   }

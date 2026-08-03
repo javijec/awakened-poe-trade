@@ -35,6 +35,14 @@ function getWorker () {
   return worker
 }
 
+/**
+ * Starts the worker while the overlay is idle. The first real price check then
+ * does parsing work only instead of also downloading and indexing game data.
+ */
+export function warmPriceCheckWorker (language: string) {
+  getWorker().postMessage({ type: 'warm', language })
+}
+
 export function preparePriceCheck (
   clipboard: string,
   language: string,
