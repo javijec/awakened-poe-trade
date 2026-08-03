@@ -22,7 +22,10 @@
       <div class="pl-2 pt-2 bg-gray-900 flex flex-col gap-1" style="min-width: 10rem;">
         <template v-for="item of menuItems">
           <button v-if="item.type === 'menu-item'"
-            @click="item.select" :class="[$style['menu-item'], { [$style['active']]: item.isSelected }]">{{ item.name }}</button>
+            @click="item.select" :class="[$style['menu-item'], { [$style['active']]: item.isSelected }]">
+            <i class="fas w-5 text-center" :class="item.icon" />
+            {{ item.name }}
+          </button>
           <div v-else
             class="border-b mx-2 border-gray-800" />
         </template>
@@ -35,11 +38,15 @@
       </div>
       <div class="text-gray-100 grow layout-column bg-gray-900">
         <div class="grow overflow-y-auto bg-gray-800 rounded-tl">
+          <div class="px-5 py-3 border-b border-gray-700 bg-gray-900 flex items-center justify-between">
+            <div class="poe-section-title">{{ t(selectedComponent.name!) }}</div>
+            <span v-if="configDirty" class="poe-badge text-yellow-200"><i class="fas fa-circle text-yellow-700 text-xs mr-1" />{{ t('settings.unsaved') }}</span>
+          </div>
           <component v-if="configClone"
             :is="selectedComponent" :config="configClone" :configWidget="configWidget" />
         </div>
         <div class="border-t bg-gray-900 border-gray-600 p-2 flex justify-end gap-x-2">
-          <button @click="save" class="px-3 bg-gray-800 rounded">{{ t('Save') }}</button>
+          <button @click="save" class="px-3 bg-gray-800 rounded" :disabled="!configDirty">{{ t('Save') }}</button>
           <button @click="cancel" class="px-3">{{ t('Cancel') }}</button>
         </div>
       </div>
@@ -163,6 +170,7 @@ export default defineComponent({
           name: t(component.name!),
           select () { selectedComponent.value = component },
           isSelected: (selectedComponent.value === component),
+          icon: menuIcon(component),
           type: 'menu-item' as const
         }))),
       () => ({ type: 'separator' as const })
@@ -185,6 +193,7 @@ export default defineComponent({
       selectedComponent,
       configClone,
       configWidget,
+      configDirty: computed(() => JSON.stringify(configClone.value) !== JSON.stringify(AppConfig())),
       patrons,
       patronsString: computed(() => {
         return [true, false].map(firstHalf => {
@@ -232,6 +241,23 @@ function flatJoin<T, J> (arr: T[][], joinEl: () => J) {
   }
   return out.slice(0, -1)
 }
+
+function menuIcon (component: Component) {
+  switch (component.name) {
+    case 'hotkeys': return 'fa-keyboard'
+    case 'chat': return 'fa-comment'
+    case 'general': return 'fa-sliders-h'
+    case 'settings-price-check': return 'fa-search-dollar'
+    case 'settings-maps': return 'fa-map'
+    case 'settings-item-check': return 'fa-scroll'
+    case 'stash-search-editor': return 'fa-archive'
+    case 'settings-stopwatch': return 'fa-stopwatch'
+    case 'settings-item-search': return 'fa-search'
+    case 'debug': return 'fa-bug'
+    case 'about': return 'fa-info-circle'
+    default: return 'fa-cog'
+  }
+}
 </script>
 
 <style lang="postcss" module>
@@ -254,16 +280,16 @@ function flatJoin<T, J> (arr: T[][], joinEl: () => J) {
   text-align: left;
   @apply p-2;
   line-height: 1;
-  @apply text-gray-600;
+  @apply text-gray-500;
   @apply rounded-l;
 
   &:hover {
-    @apply text-gray-100;
+    @apply text-yellow-100 bg-gray-800;
   }
 
   &.active {
-    @apply text-gray-400;
-    @apply bg-gray-800;
+    @apply text-yellow-100;
+    @apply bg-gray-800 border-l-2 border-yellow-700;
   }
 }
 

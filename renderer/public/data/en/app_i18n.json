@@ -330,7 +330,8 @@
     "restore_clipboard" :"Restore clipboard",
     "show_overlay_ready" :"Show a notification when the Overlay detects a PoE window",
     "debug_hotkeys": "Record all key presses",
-    "use_intl_site": "Force the English version of the site"
+    "use_intl_site": "Force the English version of the site",
+    "unsaved": "Unsaved changes"
   },
   "price_check": {
     "name": "Price check",
@@ -349,6 +350,9 @@
     "auto_search": "Perform an auto search, when pressing",
     "select_stock": "Always select \"Stock\" filter",
     "show_prediction": "Show price prediction",
-    "remember_currency": "Remember the Buyout Currency filter"
+    "remember_currency": "Remember the Buyout Currency filter",
+    "preparing": "Preparing item filters…",
+    "league_required": "Select a league to search current market listings.",
+    "select_league": "Select league"
   }
 }

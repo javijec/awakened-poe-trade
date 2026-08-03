@@ -1,6 +1,6 @@
 <template>
-  <div class="filter-name">
-    <button class="px-2 rounded border overflow-hidden text-ellipsis"
+  <div class="filter-name poe-panel">
+    <button class="px-2 rounded overflow-hidden text-ellipsis text-yellow-100"
       :class="{ 'border-gray-500': showAsActive, 'border-gray-900': !showAsActive }"
       @click="toggleAccuracy">{{ label }}</button>
     <button v-if="filters.corrupted" class="px-2" @click="corrupted = !corrupted">
@@ -82,7 +82,7 @@ export default defineComponent({
 
 <style lang="postcss">
 .filter-name {
-  @apply bg-gray-900 mb-2 rounded;
+  @apply mb-3 rounded;
   line-height: 1.25rem;
   display: flex;
   justify-content: space-between;

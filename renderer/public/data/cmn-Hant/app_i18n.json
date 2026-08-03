@@ -27,6 +27,15 @@
     "Refresh": "刷新",
     "map.mods.heist": "劫盜",
     "map.mods.outdated": "過時",
-    "Support development on": "支持開發"
+    "Support development on": "支持開發",
+    "settings": {
+      "unsaved": "尚未儲存的變更"
+    },
+    "price_check": {
+      "name": "價格查詢",
+      "preparing": "正在準備物品篩選器…",
+      "league_required": "請選擇聯盟以搜尋目前的市場商品。",
+      "select_league": "選擇聯盟"
+    }
   
 }

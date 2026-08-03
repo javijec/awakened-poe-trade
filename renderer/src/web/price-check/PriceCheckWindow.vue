@@ -43,7 +43,20 @@
           <checked-item v-if="isLeagueSelected"
             :item="item.value" :advanced-check="advancedCheck" :performance-profile-id="performanceProfileId" :prepared="prepared" />
         </template>
-        <div v-else-if="isPreparing" class="m-4 text-gray-400"><i class="fas fa-spinner fa-spin" /></div>
+        <ui-panel v-else-if="isPreparing" variant="info" class="m-4 p-4 text-gray-300 flex items-center gap-3">
+          <i class="fas fa-spinner fa-spin text-yellow-600" />
+          <div>
+            <div class="poe-section-title">{{ t('price_check.name') }}</div>
+            <div>{{ t('price_check.preparing') }}</div>
+          </div>
+        </ui-panel>
+        <ui-panel v-else-if="!isLeagueSelected" variant="warning" class="m-4 p-4 text-gray-300">
+          <div class="poe-section-title mb-1">{{ t('price_check.name') }}</div>
+          <div class="flex items-center justify-between gap-3">
+            <span>{{ t('price_check.league_required') }}</span>
+            <button class="btn whitespace-nowrap" @click="openLeagueSelection">{{ t('price_check.select_league') }}</button>
+          </div>
+        </ui-panel>
         <div v-if="isBrowserShown" class="bg-gray-900 px-6 py-2 truncate">
           <i18n-t keypath="app.toggle_browser_hint" tag="div">
             <span class="bg-gray-400 text-gray-900 rounded px-1">{{ overlayKey }}</span>
@@ -72,6 +85,7 @@ import { defineComponent, inject, PropType, shallowRef, watch, computed, nextTic
 import { Result, ok, err } from 'neverthrow'
 import { useI18n } from 'vue-i18n'
 import UiErrorBox from '@/web/ui/UiErrorBox.vue'
+import UiPanel from '@/web/ui/UiPanel.vue'
 import UiPopover from '@/web/ui/Popover.vue'
 import CheckedItem from './CheckedItem.vue'
 import BackgroundInfo from './BackgroundInfo.vue'
@@ -133,6 +147,7 @@ export default defineComponent({
     CheckPositionCircle,
     ItemQuickPrice,
     UiErrorBox,
+    UiPanel,
     UiPopover
   },
   props: {

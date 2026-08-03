@@ -3,19 +3,19 @@
     <div v-if="item.info.exchangeable" :class="$style.legacyMessage">
       {{ t(':legacy_bulk_xchg_msg') }}
     </div>
-    <div class="mb-2 flex pl-2">
-      <div class="flex items-baseline text-gray-500 mr-2">
-        <span class="mr-1">{{ t(':matched') }}</span>
-        <span v-if="!list" class="text-gray-600">...</span>
-        <span v-else>{{ list.total }}{{ list.inexact ? '+' : '' }}</span>
+    <div class="poe-panel mb-2 flex items-center gap-2 p-2">
+      <div class="flex items-baseline text-gray-400 mr-1">
+        <span class="poe-section-title mr-2">{{ t(':matched') }}</span>
+        <span v-if="!list" class="text-yellow-600"><i class="fas fa-spinner fa-spin" /></span>
+        <span v-else class="text-yellow-100 font-bold">{{ list.total }}{{ list.inexact ? '+' : '' }}</span>
       </div>
       <online-filter v-if="list" :by-time="true" :filters="filters" api="trade" />
       <div class="flex-1"></div>
       <trade-links v-if="list"
         :get-link="makeTradeLink" />
     </div>
-    <div class="layout-column overflow-y-auto overflow-x-hidden">
-      <table class="table-stripped w-full">
+    <div class="layout-column overflow-y-auto overflow-x-hidden poe-panel">
+      <table class="table-stripped w-full" aria-label="Trade results">
         <thead>
           <tr class="text-left">
             <th :class="$style.tableHeading">
@@ -50,7 +50,7 @@
             </tr>
             <tr v-else :key="result.id" :class="$style.resultRow"
               v-memo="[result, result.listedTimes, showSeller, item.stackSize, filters.itemLevel, filters.quality, item.category]">
-              <td class="px-2 whitespace-nowrap">
+              <td class="px-2 whitespace-nowrap text-yellow-100 font-semibold">
                 <span :class="{ 'line-through': result.priceCurrency === 'exalted' }">{{ result.priceAmount }} {{ result.priceCurrency }}</span>
                 <span v-if="result.listedTimes > 2" class="rounded px-1 text-gray-800 bg-gray-400 ml-1 -mr-2"><span class="font-sans">×</span> {{ result.listedTimes }}</span>
                 <span v-else-if="!result.hasFee" :class="$style.stashListing">
@@ -71,7 +71,7 @@
               </td>
               <td v-if="showSeller" class="px-2 whitespace-nowrap">
                 <span v-if="result.isMine" class="rounded px-1 text-gray-800 bg-gray-400">{{ t('You') }}</span>
-                <span v-else class="font-sans text-xs">{{ showSeller === 'ign' ? result.ign : result.accountName }}</span>
+                  <span v-else class="font-sans text-xs">{{ showSeller === 'ign' ? result.ign : result.accountName }}</span>
               </td>
             </tr>
           </template>

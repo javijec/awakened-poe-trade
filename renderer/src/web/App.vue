@@ -57,15 +57,33 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .btn {
-  @apply bg-gray-700;
-  @apply px-2 py-1;
-  @apply text-gray-400;
+  @apply bg-gray-700 border border-gray-600;
+  @apply px-2 py-1 text-gray-300;
   @apply leading-none;
   @apply rounded;
+  box-shadow: inset 0 1px 0 rgba(255, 211, 133, 0.08);
+  transition: color .15s ease, border-color .15s ease, background-color .15s ease;
+  &:hover { @apply bg-gray-600 border-yellow-700 text-yellow-100; }
+  &:focus-visible { @apply outline-none ring-1 ring-blue-400; }
+  &:disabled { @apply opacity-40 cursor-not-allowed; }
 }
 
 .btn-icon {
   @apply text-xs text-gray-600;
+}
+
+.poe-panel {
+  @apply bg-gray-800 border border-gray-700 rounded;
+  background-image: linear-gradient(135deg, rgba(212, 160, 69, .05), transparent 44%);
+  box-shadow: inset 0 1px 0 rgba(255, 223, 155, .06), 0 0 0 1px rgba(0, 0, 0, .18);
+}
+
+.poe-section-title {
+  @apply text-xs uppercase tracking-wider text-yellow-600;
+}
+
+.poe-badge {
+  @apply inline-flex items-center rounded border border-gray-600 bg-gray-900 px-1.5 py-0.5 text-xs text-gray-300;
 }
 
 @keyframes ring {

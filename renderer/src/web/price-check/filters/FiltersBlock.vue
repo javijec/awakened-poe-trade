@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="flex flex-wrap items-center pb-3 gap-2">
+    <div class="poe-panel p-2 mb-3">
+    <div class="flex flex-wrap items-center gap-2">
       <filter-btn-numeric v-if="filters.linkedSockets"
         :filter="filters.linkedSockets" :name="t('item.linked_sockets')" />
       <filter-btn-numeric v-if="filters.mapTier"
@@ -53,6 +54,7 @@
           ? t('filters.selected_some', [totalSelectedMods, stats.length])
           : t('filters.selected_none')"
       />
+    </div>
     </div>
     <div v-if="!statsVisibility.disabled && hasStats" class="mb-4" :class="(presets.length > 1) ? 'mt-1' : 'mt-4'">
       <div class="flex" v-if="presets.length > 1">
@@ -131,13 +133,13 @@ export default defineComponent({
     }
   },
   setup (props, ctx) {
-    const statsVisibility = shallowReactive({ disabled: false })
+    const statsVisibility = shallowReactive({ disabled: true })
     const showHidden = shallowRef(false)
     const showFilterSources = shallowRef(false)
 
     watch(() => props.item, () => {
       showHidden.value = false
-      statsVisibility.disabled = false
+      statsVisibility.disabled = true
     })
 
     const showUnknownMods = computed(() =>

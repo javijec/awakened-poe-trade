@@ -1,11 +1,11 @@
 <template>
   <widget :config="config" :hideable="false" :removable="false" move-handles="corners" v-slot="{ isEditing }">
-    <div class="widget-default-style">
-      <div class="p-1 flex gap-1 items-center text-base">
+    <div class="widget-default-style poe-panel">
+      <div class="p-1.5 flex gap-1 items-center text-base">
         <template v-for="widget in widgets" :key="widget.wmId">
           <button @click="toggle(widget)"
-            :class="widget.wmWants === 'show' ? 'border-gray-500' : 'border-gray-800'"
-            class="bg-gray-800 rounded text-gray-100 p-2 leading-none whitespace-nowrap border"
+            :class="widget.wmWants === 'show' ? 'border-yellow-700 text-yellow-100' : 'border-gray-800 text-gray-400'"
+            class="bg-gray-800 rounded p-2 leading-none whitespace-nowrap border hover:border-yellow-700"
           >
             <i v-if="widget.icon" class="fas align-bottom" :class="widget.icon" />
             <template v-if="widget.title">{{ widget.title }}</template>
@@ -29,7 +29,7 @@
         <ui-toggle v-model="config.alwaysShow">{{ t(':always_show') }}</ui-toggle>
       </div>
       <div v-else class="px-1 pb-1">
-        <textarea class="px-2 py-1.5 bg-gray-700 rounded resize-none block"
+        <textarea class="px-2 py-1.5 bg-gray-900 border border-gray-700 rounded resize-none block focus:border-blue-400 outline-none"
           rows="1" spellcheck="false"
           :placeholder="t(':price_check')" @input="handleItemPaste"></textarea>
       </div>
