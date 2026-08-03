@@ -25,7 +25,7 @@
       <trade-links v-if="result"
         :get-link="makeTradeLink" />
     </div>
-    <div class="layout-column overflow-y-auto overflow-x-hidden">
+    <div class="layout-column overflow-y-auto overflow-x-hidden poe-panel">
       <table class="table-stripped w-full">
         <thead>
           <tr class="text-left">
@@ -347,12 +347,13 @@ export default defineComponent({
 <style lang="postcss" module>
 .tableHeading {
   @apply sticky top-0;
-  @apply bg-gray-800;
+  background: #0d0d0d;
+  color: rgba(225, 205, 160, .95);
   @apply p-0 m-0;
   white-space: nowrap;
 
   & > div {
-    @apply border-b border-gray-700;
+    border-bottom: 1px solid rgba(163, 141, 109, .2);
   }
 }
 
@@ -375,19 +376,27 @@ export default defineComponent({
 }
 
 .legacyMessage {
-  @apply rounded p-2 mb-3;
-  @apply border border-gray-600 bg-gray-700;
+  margin: 0 0 .5rem;
+  padding: .6rem .75rem;
+  border: 1px solid rgba(163, 141, 109, .28);
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(163, 141, 109, .15), rgba(238, 238, 238, .025));
+  color: rgba(225, 215, 190, .92);
+  font-family: FontinSmallCaps, FrizQuadrataC;
+  font-size: .75rem;
+  letter-spacing: .045em;
   text-wrap-style: balance;
   text-align: center;
 }
 
 .marketRatioRow {
-  @apply bg-gray-700 !important;
-  outline: 1px solid theme('colors.gray.600');
+  background: rgba(163, 141, 109, .12) !important;
+  outline: 1px solid rgba(163, 141, 109, .28);
   outline-offset: -1px;
 }
 
 .resultRow {
+  color: rgba(225, 215, 190, .9);
   content-visibility: auto;
   contain-intrinsic-size: 1.75rem;
 }

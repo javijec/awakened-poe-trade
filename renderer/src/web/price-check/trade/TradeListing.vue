@@ -50,7 +50,7 @@
             </tr>
             <tr v-else :key="result.id" :class="$style.resultRow"
               v-memo="[result, result.listedTimes, showSeller, item.stackSize, filters.itemLevel, filters.quality, item.category]">
-              <td class="px-2 whitespace-nowrap text-yellow-100 font-semibold">
+              <td :class="$style.price" class="px-2 whitespace-nowrap font-semibold">
                 <span :class="{ 'line-through': result.priceCurrency === 'exalted' }">{{ result.priceAmount }} {{ result.priceCurrency }}</span>
                 <span v-if="result.listedTimes > 2" class="rounded px-1 text-gray-800 bg-gray-400 ml-1 -mr-2"><span class="font-sans">×</span> {{ result.listedTimes }}</span>
                 <span v-else-if="!result.hasFee" :class="$style.stashListing">
@@ -272,6 +272,7 @@ export default defineComponent({
 .tableHeading {
   @apply sticky top-0;
   background: #0d0d0d;
+  color: rgba(225, 205, 160, .95);
   @apply p-0 m-0;
   white-space: nowrap;
 
@@ -306,8 +307,13 @@ export default defineComponent({
 }
 
 .resultRow {
+  color: rgba(225, 215, 190, .9);
   content-visibility: auto;
   contain-intrinsic-size: 1.75rem;
+}
+
+.price {
+  color: #d6bd7a;
 }
 
 .skeleton td {
@@ -333,8 +339,15 @@ export default defineComponent({
 }
 
 .legacyMessage {
-  @apply rounded p-2 mb-3;
-  @apply border border-gray-600 bg-gray-700;
+  margin: 0 0 .5rem;
+  padding: .6rem .75rem;
+  border: 1px solid rgba(163, 141, 109, .28);
+  border-radius: 6px;
+  background: linear-gradient(90deg, rgba(163, 141, 109, .15), rgba(238, 238, 238, .025));
+  color: rgba(225, 215, 190, .92);
+  font-family: FontinSmallCaps, FrizQuadrataC;
+  font-size: .75rem;
+  letter-spacing: .045em;
   text-wrap-style: balance;
   text-align: center;
 }
