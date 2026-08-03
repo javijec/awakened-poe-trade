@@ -291,6 +291,12 @@ export default defineComponent({
 
     const overlayBackground = computed<string | undefined>(() => {
       if (!active.value) return undefined
+      // Price Check should float over the game. Its own panels provide all the
+      // needed contrast, while a full-window tint makes the surrounding game
+      // area look unnecessarily opaque.
+      const exclusiveWidget = widgets.value
+        .find(widget => widget.wmZorder === 'exclusive' && widget.wmWants === 'show')
+      if (exclusiveWidget?.wmType === 'price-check') return 'transparent'
       return AppConfig().overlayBackground
     })
 
