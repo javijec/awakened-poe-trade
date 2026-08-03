@@ -1136,7 +1136,13 @@ function parseStatsFromMod (lines: string[], item: ParsedItem, modifier: ParsedM
  * @deprecated
  */
 function transformToLegacyModifiers (item: ParsedItem) {
-  item.statsByType = sumStatsByModType(item.newMods)
+  // Tincture tooltip values already include their increased-effect modifier.
+  // Applying the modifier again inflated the effect roll itself (and any value
+  // represented directly by the game client).
+  item.statsByType = sumStatsByModType(
+    item.newMods,
+    item.category !== ItemCategory.Tincture
+  )
 }
 
 function calcBasePercentile (item: ParsedItem) {

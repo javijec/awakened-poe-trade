@@ -39,7 +39,6 @@ export function createExactStatFilters (
   if (
     !item.influences.length &&
     !item.isFractured &&
-    item.category !== ItemCategory.Tincture &&
     item.category !== ItemCategory.Idol
   ) {
     keepByType.push(ModifierType.Implicit)

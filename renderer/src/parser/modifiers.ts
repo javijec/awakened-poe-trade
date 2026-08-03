@@ -21,7 +21,10 @@ export interface StatRoll {
   max: number
 }
 
-export function sumStatsByModType (mods: readonly ParsedModifier[]): StatCalculated[] {
+export function sumStatsByModType (
+  mods: readonly ParsedModifier[],
+  applyModifierIncreases = true
+): StatCalculated[] {
   const out: StatCalculated[] = []
 
   for (const modA of mods) {
@@ -40,7 +43,9 @@ export function sumStatsByModType (mods: readonly ParsedModifier[]): StatCalcula
               statB.stat.ref === statA.stat.ref
             )
             if (targetStat) {
-              const roll = (applyIncr(modB.info, targetStat) ?? targetStat).roll
+              const roll = (applyModifierIncreases
+                ? (applyIncr(modB.info, targetStat) ?? targetStat)
+                : targetStat).roll
               filtered.push({
                 modifier: modB,
                 stat: targetStat,
