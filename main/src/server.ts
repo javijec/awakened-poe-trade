@@ -25,6 +25,7 @@ if (!process.env.VITE_DEV_SERVER_URL) {
     if (req.url?.startsWith('/config') || req.url?.startsWith('/uploads') || req.url?.startsWith('/proxy')) return
 
     const filePath = (req.url === '/') ? '/index.html' : req.url!
+    res.setHeader('Content-Security-Policy', "default-src 'self'; base-uri 'none'; object-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'none'")
     switch (path.extname(filePath)) {
       case '.html': res.setHeader('content-type', 'text/html'); break;
       case '.js': res.setHeader('content-type', 'text/javascript'); break;
@@ -96,15 +97,19 @@ export async function startServer (
   const configStore = new ConfigStore(eventPipe)
 
   ipcMain.on('awakened:event', (event, message: unknown) => {
+    if (!electronClients.has(event.sender)) return
     if (!isRendererToMainEvent(message)) return
     lastActiveElectron = event.sender
     evBus.emit(message.name, message.payload)
   })
-  ipcMain.handle('awakened:get-host-state', async (): Promise<HostState> => ({
-    version: app.getVersion(),
-    updater: appUpdater.info,
-    contents: await configStore.load()
-  }))
+  ipcMain.handle('awakened:get-host-state', async (event): Promise<HostState> => {
+    if (!electronClients.has(event.sender)) throw new Error('Untrusted IPC sender')
+    return {
+      version: app.getVersion(),
+      updater: appUpdater.info,
+      contents: await configStore.load()
+    }
+  })
 
   websocketServer.on('connection', (socket) => {
     lastActiveClient = socket

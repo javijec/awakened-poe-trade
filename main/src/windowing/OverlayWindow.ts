@@ -5,6 +5,18 @@ import type { ServerEvents } from '../server'
 import type { Logger } from '../RemoteLogger'
 import type { GameWindow } from './GameWindow'
 
+const TRADE_HOSTS = new Set(['www.pathofexile.com', 'ru.pathofexile.com', 'pathofexile.tw', 'poe.kakaogames.com'])
+const EXTERNAL_HOSTS = new Set([...TRADE_HOSTS, 'poe.ninja', 'www.poewiki.net', 'poedb.tw', 'craftofexile.com', 'snosme.github.io', 'patreon.com'])
+
+function hasAllowedHost (url: string, hosts: Set<string>) {
+  try {
+    const parsed = new URL(url)
+    return parsed.protocol === 'https:' && hosts.has(parsed.hostname)
+  } catch {
+    return false
+  }
+}
+
 export class OverlayWindow {
   public isInteractable = false
   public wasUsedRecently = true
@@ -37,6 +49,8 @@ export class OverlayWindow {
       webPreferences: {
         allowRunningInsecureContent: false,
         contextIsolation: true,
+        sandbox: true,
+        nodeIntegration: false,
         preload: path.join(__dirname, 'preload.js'),
         webviewTag: true,
         spellcheck: false
@@ -52,10 +66,29 @@ export class OverlayWindow {
     this.window.webContents.on('before-input-event', this.handleExtraCommands)
     this.window.webContents.on('did-attach-webview', (_, webviewWebContents) => {
       webviewWebContents.on('before-input-event', this.handleExtraCommands)
+      webviewWebContents.on('will-navigate', (event, url) => {
+        if (!hasAllowedHost(url, TRADE_HOSTS)) event.preventDefault()
+      })
+    })
+
+    this.window.webContents.on('will-attach-webview', (event, webPreferences, params) => {
+      if (!hasAllowedHost(params.src, TRADE_HOSTS)) {
+        event.preventDefault()
+        return
+      }
+      webPreferences.nodeIntegration = false
+      webPreferences.contextIsolation = true
+      webPreferences.sandbox = true
+      delete webPreferences.preload
+      params.allowpopups = 'false'
+    })
+
+    this.window.webContents.on('will-navigate', (event, url) => {
+      if (!this.isOverlayUrl(url)) event.preventDefault()
     })
 
     this.window.webContents.setWindowOpenHandler((details) => {
-      shell.openExternal(details.url)
+      if (hasAllowedHost(details.url, EXTERNAL_HOSTS)) shell.openExternal(details.url)
       return { action: 'deny' }
     })
   }
@@ -75,6 +108,11 @@ export class OverlayWindow {
     } else {
       this.window.loadURL(url)
     }
+  }
+
+  private isOverlayUrl (url: string) {
+    const expected = process.env.VITE_DEV_SERVER_URL || 'http://localhost'
+    return url.startsWith(expected)
   }
 
   assertOverlayActive = () => {
