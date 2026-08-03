@@ -199,7 +199,10 @@ export default defineComponent({
         })
       }
       closeBrowser()
-      wm.show(props.config.wmId)
+      // Do not reveal a half-prepared price check. Apart from avoiding a
+      // distracting loading flash, this also prevents the previous item's
+      // result from being visible while the worker prepares the next one.
+      wm.hide(props.config.wmId)
       checkPosition.value = e.position
       advancedCheck.value = e.focusOverlay
       performanceProfileId.value = beginPriceCheckProfile('item-text')
@@ -207,6 +210,7 @@ export default defineComponent({
       const request = ++latestRequest
 
       const setItem = (parsed: Result<ParsedItem, string>) => {
+        if (request !== latestRequest) return
         item.value = parsed
           .andThen(item => (
             (item.category === ItemCategory.Sentinel && item.rarity !== ItemRarity.Unique))
@@ -217,6 +221,7 @@ export default defineComponent({
             message: `${err}_help`,
             rawText: e.clipboard
           }))
+        wm.show(props.config.wmId)
       }
 
       if (e.item) {
