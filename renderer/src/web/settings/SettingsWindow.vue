@@ -49,24 +49,29 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, shallowRef, computed, Component, PropType, nextTick, inject, reactive, watch } from 'vue'
+import { defineAsyncComponent, defineComponent, shallowRef, computed, Component, PropType, nextTick, inject, reactive, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { AppConfig, updateConfig, saveConfig, pushHostConfig, Config } from '@/web/Config'
 import { APP_PATRONS } from '@/assets/data'
 import { Host } from '@/web/background/IPC'
 import type { Widget, WidgetManager, WidgetSpec } from '@/web/overlay/interfaces'
 import AppTitleBar from '@/web/ui/AppTitlebar.vue'
-import SettingsHotkeys from './hotkeys.vue'
-import SettingsChat from './chat.vue'
-import SettingsGeneral from './general.vue'
-import SettingsAbout from './about.vue'
-import SettingsPricecheck from '../price-check/settings-price-check.vue'
-import SettingsItemcheck from '../item-check/settings-item-check.vue'
-import SettingsDebug from './debug.vue'
-import SettingsMaps from '../map-check/settings-maps.vue'
-import SettingsStashSearch from '../stash-search/stash-search-editor.vue'
-import SettingsStopwatch from '../stopwatch/settings-stopwatch.vue'
-import SettingsItemSearch from '../item-search/settings-item-search.vue'
+
+function lazySettingsComponent (name: string, loader: () => Promise<Component>) {
+  return Object.assign(defineAsyncComponent(loader), { name })
+}
+
+const SettingsHotkeys = lazySettingsComponent('hotkeys', () => import('./hotkeys.vue'))
+const SettingsChat = lazySettingsComponent('chat', () => import('./chat.vue'))
+const SettingsGeneral = lazySettingsComponent('general', () => import('./general.vue'))
+const SettingsAbout = lazySettingsComponent('about', () => import('./about.vue'))
+const SettingsPricecheck = lazySettingsComponent('settings-price-check', () => import('../price-check/settings-price-check.vue'))
+const SettingsItemcheck = lazySettingsComponent('settings-item-check', () => import('../item-check/settings-item-check.vue'))
+const SettingsDebug = lazySettingsComponent('debug', () => import('./debug.vue'))
+const SettingsMaps = lazySettingsComponent('settings-maps', () => import('../map-check/settings-maps.vue'))
+const SettingsStashSearch = lazySettingsComponent('stash-search-editor', () => import('../stash-search/stash-search-editor.vue'))
+const SettingsStopwatch = lazySettingsComponent('settings-stopwatch', () => import('../stopwatch/settings-stopwatch.vue'))
+const SettingsItemSearch = lazySettingsComponent('settings-item-search', () => import('../item-search/settings-item-search.vue'))
 
 function shuffle<T> (array: T[]): T[] {
   let currentIndex = array.length

@@ -59,17 +59,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, computed, watch } from 'vue'
+import { defineAsyncComponent, defineComponent, PropType, computed, watch } from 'vue'
 import { useI18nNs } from '@/web/i18n'
 import { usePoeninja } from '@/web/background/Prices'
 import { isValuableBasetype, getDetailsId } from './getDetailsId'
 import ItemQuickPrice from '@/web/ui/ItemQuickPrice.vue'
-import VueApexcharts from 'vue3-apexcharts'
 import { ParsedItem } from '@/parser'
 import { artificialSlowdown } from '../trade/artificial-slowdown'
 import { ItemFilters } from '../filters/interfaces'
 
 const slowdown = artificialSlowdown(800)
+const VueApexcharts = defineAsyncComponent(() => import('vue3-apexcharts'))
 
 export default defineComponent({
   components: {

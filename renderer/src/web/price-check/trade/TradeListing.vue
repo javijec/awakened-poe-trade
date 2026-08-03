@@ -48,7 +48,8 @@
             <tr v-if="!result" :key="idx">
               <td colspan="100" class="text-transparent">***</td>
             </tr>
-            <tr v-else :key="result.id">
+            <tr v-else :key="result.id" :class="$style.resultRow"
+              v-memo="[result, result.listedTimes, showSeller, item.stackSize, filters.itemLevel, filters.quality, item.category]">
               <td class="px-2 whitespace-nowrap">
                 <span :class="{ 'line-through': result.priceCurrency === 'exalted' }">{{ result.priceAmount }} {{ result.priceCurrency }}</span>
                 <span v-if="result.listedTimes > 2" class="rounded px-1 text-gray-800 bg-gray-400 ml-1 -mr-2"><span class="font-sans">×</span> {{ result.listedTimes }}</span>
@@ -303,6 +304,11 @@ export default defineComponent({
     text-align: center;
     text-shadow: 1px 1px 1px black;
   }
+}
+
+.resultRow {
+  content-visibility: auto;
+  contain-intrinsic-size: 1.75rem;
 }
 
 .stashIcon {

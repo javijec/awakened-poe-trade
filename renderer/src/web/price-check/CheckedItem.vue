@@ -48,14 +48,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, watch, ref, nextTick, computed, ComponentPublicInstance } from 'vue'
+import { defineAsyncComponent, defineComponent, PropType, watch, ref, nextTick, computed, ComponentPublicInstance } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { ItemRarity, ItemCategory, ParsedItem } from '@/parser'
-import TradeListing from './trade/TradeListing.vue'
-import TradeBulk from './trade/TradeBulk.vue'
 import TradeLinks from './trade/TradeLinks.vue'
 import { apiToSatisfySearch, getTradeEndpoint } from './trade/common'
-import PriceTrend from './trends/PriceTrend.vue'
 import FiltersBlock from './filters/FiltersBlock.vue'
 import { createPresets } from './filters/create-presets'
 import PricePrediction from './price-prediction/PricePrediction.vue'
@@ -68,6 +65,10 @@ import { PriceCheckWidget } from '../overlay/interfaces'
 import { useLeagues } from '@/web/background/Leagues'
 import { finishPriceCheckProfile, measurePriceCheckStage } from './performance'
 import type { PreparedPriceCheck } from './worker-protocol'
+
+const TradeListing = defineAsyncComponent(() => import('./trade/TradeListing.vue'))
+const TradeBulk = defineAsyncComponent(() => import('./trade/TradeBulk.vue'))
+const PriceTrend = defineAsyncComponent(() => import('./trends/PriceTrend.vue'))
 
 let _showSupportLinksCounter = 0
 

@@ -56,8 +56,9 @@
             <tr v-if="!result" :key="idx">
               <td colspan="100" class="text-transparent">***</td>
             </tr>
-            <tr v-else :key="result.id"
-              :class="{ [$style.marketRatioRow]: ('marketRatio' in result) }">
+            <tr v-else :key="result.id" :class="[$style.resultRow, { [$style.marketRatioRow]: ('marketRatio' in result) }]"
+              v-memo="[result, selectedCurr, showSeller]"
+              >
               <td class="px-2">{{ Number((result.exchangeAmount / result.itemAmount).toFixed(4)) }}</td>
               <td class="pl-1 whitespace-nowrap"><span class="w-8 inline-block text-right">{{ Number(result.exchangeAmount.toFixed(1)) }}</span><span>{{ '\u2009' }}/{{ '\u2009' }}</span><span class="w-8 inline-block">{{ Number(result.itemAmount.toFixed(1)) }}</span></td>
               <template v-if="'marketRatio' in result">
@@ -384,5 +385,10 @@ export default defineComponent({
   @apply bg-gray-700 !important;
   outline: 1px solid theme('colors.gray.600');
   outline-offset: -1px;
+}
+
+.resultRow {
+  content-visibility: auto;
+  contain-intrinsic-size: 1.75rem;
 }
 </style>

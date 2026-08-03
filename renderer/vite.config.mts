@@ -16,9 +16,6 @@ export default defineConfig({
     target: 'esnext',
     assetsInlineLimit: 0
   },
-  optimizeDeps: {
-    esbuildOptions: { target: 'esnext' }
-  },
   plugins: [
     vuePlugin()
   ],
@@ -28,8 +25,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
-      '@ipc': path.resolve(__dirname, './src/../../ipc')
+      '@': path.resolve(import.meta.dirname, './src'),
+      '@ipc': path.resolve(import.meta.dirname, './src/../../ipc')
     }
   },
   server: {
