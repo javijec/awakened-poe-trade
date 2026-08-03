@@ -58,12 +58,12 @@
       v-model="requestPricePrediction">{{ t(':show_prediction') }} <span class="bg-gray-700 px-1 rounded">www.poeprices.info</span></ui-checkbox>
     <ui-checkbox class="mb-4"
       v-model="showCursor">{{ t(':cursor_pos') }}</ui-checkbox>
-    <div class="mb-4" :class="{ 'p-2 bg-orange-600 rounded': builtinBrowser }">
+    <div class="mb-4" :class="{ [$style.browserWarning]: builtinBrowser }">
       <ui-checkbox v-model="builtinBrowser">{{ t(':enable_browser') }}</ui-checkbox>
       <div v-if="builtinBrowser" class="mt-1">{{ t(':builtin_browser_warning') }}</div>
     </div>
-    <div class="border-2 rounded border-gray-700 mb-2">
-      <div class="bg-gray-700 p-2 mb-2">{{ t(':warn_expensive') }}</div>
+    <div :class="$style.tradeLoad" class="mb-2">
+      <div :class="$style.tradeLoadHeader">{{ t(':warn_expensive') }}</div>
       <ui-checkbox class="mb-4 mx-2" :values="['app', 'api']"
         v-model="collapseListings">{{ t(':accurate_collapsed') }}</ui-checkbox>
       <div class="mb-2 mx-2">
@@ -163,3 +163,31 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="postcss" module>
+.tradeLoad {
+  overflow: hidden;
+  border: 1px solid rgba(163, 141, 109, .28);
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(163, 141, 109, .055), rgba(5, 5, 5, .3));
+}
+
+.tradeLoadHeader {
+  margin-bottom: .75rem;
+  padding: .625rem .75rem;
+  border-bottom: 1px solid rgba(163, 141, 109, .18);
+  background: rgba(163, 141, 109, .08);
+  color: rgba(196, 177, 140, .94);
+  font-family: FontinSmallCaps, FrizQuadrataC;
+  font-size: .75rem;
+  line-height: 1.45;
+}
+
+.browserWarning {
+  padding: .625rem;
+  border: 1px solid rgba(163, 141, 109, .45);
+  border-radius: 6px;
+  background: rgba(163, 141, 109, .1);
+  color: rgba(238, 238, 238, .88);
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
-  <div class="max-w-md p-2">
-    <div class="mb-2 bg-gray-700 rounded px-2 py-1 leading-none">
+  <div class="max-w-md p-5" style="color: rgba(238,238,238,.82);">
+    <div class="mb-2 rounded px-2 py-2 leading-none" style="border: 1px solid rgba(163,141,109,.3); background: rgba(163,141,109,.08); color: rgba(196,177,140,.92);">
       <i class="fas fa-info-circle"></i> {{ t('settings.clear_hotkey') }}
     </div>
     <div class="flex flex-col gap-4 mb-8">

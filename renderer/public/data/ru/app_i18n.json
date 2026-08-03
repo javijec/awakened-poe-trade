@@ -336,7 +336,6 @@
     "chat": "Чат",
     "general": "Общие",
     "debug": "Debug",
-    "about": "О программе",
     "font_size" :"Размер шрифта",
     "overlay_bg" :"Фон, когда окно APT кликабельно",
     "overlay_bg_none" :"Прозрачный",

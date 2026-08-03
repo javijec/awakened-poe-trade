@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-md p-2">
+  <div class="max-w-md p-5" style="color: rgba(238,238,238,.82);">
     <div class="mb-2">
       <div class="flex-1 mb-1">{{ t(':language') }}</div>
       <select v-model="language" class="p-1 rounded bg-gray-700 w-24">

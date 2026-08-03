@@ -310,7 +310,6 @@
     "chat": "Chat",
     "general": "General",
     "debug": "Debug",
-    "about": "About",
     "font_size": "글씨 크기",
     "overlay_bg": "Background when the Overlay is clickable",
     "overlay_bg_none": "Transparent",
