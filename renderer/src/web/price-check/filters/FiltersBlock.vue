@@ -133,13 +133,13 @@ export default defineComponent({
     }
   },
   setup (props, ctx) {
-    const statsVisibility = shallowReactive({ disabled: true })
+    const statsVisibility = shallowReactive({ disabled: false })
     const showHidden = shallowRef(false)
     const showFilterSources = shallowRef(false)
 
     watch(() => props.item, () => {
       showHidden.value = false
-      statsVisibility.disabled = true
+      statsVisibility.disabled = false
     })
 
     const showUnknownMods = computed(() =>
