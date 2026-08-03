@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="!isPreparing"
     style="top: 0; left: 0; height: 100%; width: 100%; position: absolute;"
     class="flex grow h-full pointer-events-none" :class="{
     'flex-row': clickPosition === 'stash',
@@ -43,13 +44,6 @@
           <checked-item v-if="isLeagueSelected"
             :item="item.value" :advanced-check="advancedCheck" :performance-profile-id="performanceProfileId" :prepared="prepared" />
         </template>
-        <ui-panel v-else-if="isPreparing" variant="info" class="m-4 p-4 text-gray-300 flex items-center gap-3">
-          <i class="fas fa-spinner fa-spin text-yellow-600" />
-          <div>
-            <div class="poe-section-title">{{ t('price_check.name') }}</div>
-            <div>{{ t('price_check.preparing') }}</div>
-          </div>
-        </ui-panel>
         <ui-panel v-else-if="!isLeagueSelected" variant="warning" class="m-4 p-4 text-gray-300">
           <div class="poe-section-title mb-1">{{ t('price_check.name') }}</div>
           <div class="flex items-center justify-between gap-3">
@@ -199,10 +193,12 @@ export default defineComponent({
         })
       }
       closeBrowser()
-      // Do not reveal a half-prepared price check. Apart from avoiding a
-      // distracting loading flash, this also prevents the previous item's
-      // result from being visible while the worker prepares the next one.
-      wm.hide(props.config.wmId)
+      // Mark the content as hidden before activating the exclusive widget.
+      // Electron can paint between overlay activation and the worker request.
+      isPreparing.value = !e.item
+      // Keep Price Check exclusive while its content is hidden during parsing.
+      // Otherwise the widget menu becomes visible between two item checks.
+      wm.show(props.config.wmId)
       checkPosition.value = e.position
       advancedCheck.value = e.focusOverlay
       performanceProfileId.value = beginPriceCheckProfile('item-text')
@@ -221,14 +217,11 @@ export default defineComponent({
             message: `${err}_help`,
             rawText: e.clipboard
           }))
-        wm.show(props.config.wmId)
       }
 
       if (e.item) {
-        isPreparing.value = false
         setItem(ok(e.item as ParsedItem))
       } else {
-        isPreparing.value = true
         item.value = null
         preparePriceCheck(e.clipboard, AppConfig().language, {
           league: leagues.selectedId.value ?? 'Standard',
