@@ -1,0 +1,13 @@
+{
+  "name": "@awakened/ipc",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./KeyToCode": "./KeyToCode.ts",
+    "./types": "./types.ts",
+    "./validation": "./validation.ts"
+  },
+  "dependencies": {
+    "zod": "^4.1.12"
+  }
+}

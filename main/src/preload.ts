@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import type { HostState, IpcEvent, MainToRendererEvent, RendererToMainEvent } from '../../ipc/types'
+import type { HostState, IpcEvent, MainToRendererEvent, RendererToMainEvent } from '@awakened/ipc/types'
 
 contextBridge.exposeInMainWorld('awakenedNative', {
   send (event: RendererToMainEvent) {

@@ -1,52 +1,48 @@
-import type { IpcEvent, RendererToMainEvent } from './types'
+import { z } from 'zod'
+import type { RendererToMainEvent } from './types.js'
 
-const inboundNames = new Set<RendererToMainEvent['name']>([
-  'OVERLAY->MAIN::focus-game',
-  'OVERLAY->MAIN::track-area',
-  'CLIENT->MAIN::update-host-config',
-  'CLIENT->MAIN::used-recently',
-  'CLIENT->MAIN::save-config',
-  'CLIENT->MAIN::user-action'
+const point = z.object({ x: z.number().finite(), y: z.number().finite() }).strict()
+
+export const RendererToMainEventSchema = z.discriminatedUnion('name', [
+  z.object({ name: z.literal('OVERLAY->MAIN::focus-game'), payload: z.undefined() }).strict(),
+  z.object({
+    name: z.literal('OVERLAY->MAIN::track-area'),
+    payload: z.object({
+      holdKey: z.string(),
+      closeThreshold: z.number().finite(),
+      from: point,
+      area: point.extend({ width: z.number().finite(), height: z.number().finite() }),
+      dpr: z.number().finite()
+    }).strict()
+  }).strict(),
+  z.object({
+    name: z.literal('CLIENT->MAIN::update-host-config'),
+    payload: z.object({
+      shortcuts: z.array(z.unknown()),
+      restoreClipboard: z.boolean(),
+      clientLog: z.string().nullable(),
+      gameConfig: z.string().nullable(),
+      stashScroll: z.boolean(),
+      overlayKey: z.string(),
+      logKeys: z.boolean(),
+      windowTitle: z.string(),
+      language: z.string()
+    }).strict()
+  }).strict(),
+  z.object({ name: z.literal('CLIENT->MAIN::used-recently'), payload: z.object({ isOverlay: z.boolean() }).strict() }).strict(),
+  z.object({ name: z.literal('CLIENT->MAIN::save-config'), payload: z.object({ contents: z.string(), isTemporary: z.boolean() }).strict() }).strict(),
+  z.object({
+    name: z.literal('CLIENT->MAIN::user-action'),
+    payload: z.discriminatedUnion('action', [
+      z.object({ action: z.literal('check-for-update') }).strict(),
+      z.object({ action: z.literal('update-and-restart') }).strict(),
+      z.object({ action: z.literal('quit') }).strict(),
+      z.object({ action: z.literal('stash-search'), text: z.string() }).strict()
+    ])
+  }).strict()
 ])
 
-const isRecord = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null
-const isNumber = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value)
-
-/** Rejects malformed renderer messages before they reach the main event bus. */
-export function isRendererToMainEvent (value: unknown): value is RendererToMainEvent {
-  if (!isRecord(value) || typeof value.name !== 'string' || !inboundNames.has(value.name as RendererToMainEvent['name'])) return false
-
-  switch (value.name) {
-    case 'OVERLAY->MAIN::focus-game': return value.payload === undefined
-    case 'CLIENT->MAIN::used-recently': return isRecord(value.payload) && typeof value.payload.isOverlay === 'boolean'
-    case 'CLIENT->MAIN::save-config': return isRecord(value.payload) && typeof value.payload.contents === 'string' && typeof value.payload.isTemporary === 'boolean'
-    case 'CLIENT->MAIN::user-action':
-      return isRecord(value.payload) && (
-        value.payload.action === 'check-for-update' ||
-        value.payload.action === 'update-and-restart' ||
-        value.payload.action === 'quit' ||
-        (value.payload.action === 'stash-search' && typeof value.payload.text === 'string')
-      )
-    case 'OVERLAY->MAIN::track-area': {
-      const payload = value.payload
-      return isRecord(payload) && typeof payload.holdKey === 'string' && isNumber(payload.closeThreshold) && isNumber(payload.dpr) &&
-        isRecord(payload.from) && isNumber(payload.from.x) && isNumber(payload.from.y) &&
-        isRecord(payload.area) && isNumber(payload.area.x) && isNumber(payload.area.y) && isNumber(payload.area.width) && isNumber(payload.area.height)
-    }
-    case 'CLIENT->MAIN::update-host-config': {
-      const payload = value.payload
-      return isRecord(payload) && Array.isArray(payload.shortcuts) &&
-        typeof payload.restoreClipboard === 'boolean' && typeof payload.stashScroll === 'boolean' &&
-        typeof payload.overlayKey === 'string' && typeof payload.logKeys === 'boolean' &&
-        typeof payload.windowTitle === 'string' && typeof payload.language === 'string' &&
-        (typeof payload.clientLog === 'string' || payload.clientLog === null) &&
-        (typeof payload.gameConfig === 'string' || payload.gameConfig === null)
-    }
-  }
-  return false
-}
-
-export function isIpcEvent (value: unknown): value is IpcEvent {
-  return isRecord(value) && typeof value.name === 'string' && 'payload' in value
+export function parseRendererToMainEvent (value: unknown): RendererToMainEvent | undefined {
+  const result = RendererToMainEventSchema.safeParse(value)
+  return result.success ? result.data as RendererToMainEvent : undefined
 }

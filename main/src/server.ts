@@ -5,8 +5,8 @@ import { EventEmitter } from 'events'
 import * as fs from 'fs'
 import * as path from 'path'
 import { app, ipcMain, type WebContents } from 'electron'
-import { IpcEvent, IpcEventPayload, HostState } from '../../ipc/types'
-import { isRendererToMainEvent } from '../../ipc/validation'
+import { IpcEvent, IpcEventPayload, HostState } from '@awakened/ipc/types'
+import { parseRendererToMainEvent } from '@awakened/ipc/validation'
 import { ConfigStore } from './host-files/ConfigStore'
 import { addFileUploadRoutes } from './host-files/file-uploads'
 import type { AppUpdater } from './AppUpdater'
@@ -98,9 +98,10 @@ export async function startServer (
 
   ipcMain.on('awakened:event', (event, message: unknown) => {
     if (!electronClients.has(event.sender)) return
-    if (!isRendererToMainEvent(message)) return
+    const parsed = parseRendererToMainEvent(message)
+    if (!parsed) return
     lastActiveElectron = event.sender
-    evBus.emit(message.name, message.payload)
+    evBus.emit(parsed.name, parsed.payload)
   })
   ipcMain.handle('awakened:get-host-state', async (event): Promise<HostState> => {
     if (!electronClients.has(event.sender)) throw new Error('Untrusted IPC sender')
@@ -120,11 +121,12 @@ export async function startServer (
       } catch {
         return
       }
-      if (!isRendererToMainEvent(event)) return
-      if (event.name === 'CLIENT->MAIN::used-recently') {
+      const parsed = parseRendererToMainEvent(event)
+      if (!parsed) return
+      if (parsed.name === 'CLIENT->MAIN::used-recently') {
         lastActiveClient = socket
       }
-      evBus.emit(event.name, event.payload)
+      evBus.emit(parsed.name, parsed.payload)
     })
     socket.on('close', () => {
       const clients = websocketServer.clients

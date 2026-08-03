@@ -1,7 +1,7 @@
 import { reactive as deepReactive, shallowRef, toRaw } from 'vue'
 import isDeepEqual from 'fast-deep-equal'
 import { Host } from '@/web/background/IPC'
-import { HostConfig, ShortcutAction } from '@ipc/types'
+import { HostConfig, ShortcutAction } from '@awakened/ipc/types'
 import type * as widget from './overlay/widgets'
 import type { StashSearchWidget } from './stash-search/widget'
 import type { ItemCheckWidget } from './item-check/widget'

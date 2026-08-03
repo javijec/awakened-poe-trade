@@ -17,6 +17,7 @@
   },
   "main": "dist/main.js",
   "dependencies": {
+    "@awakened/ipc": "workspace:*",
     "electron-overlay-window": "4.1.0",
     "uiohook-napi": "1.5.5"
   },

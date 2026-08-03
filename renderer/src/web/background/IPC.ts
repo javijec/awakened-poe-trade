@@ -1,4 +1,4 @@
-import type { IpcEvent, IpcEventPayload, UpdateInfo, HostState, MainToRendererEvent, RendererToMainEvent } from '@ipc/types'
+import type { IpcEvent, IpcEventPayload, UpdateInfo, HostState, MainToRendererEvent, RendererToMainEvent } from '@awakened/ipc/types'
 import { shallowRef } from 'vue'
 import Sockette from 'sockette'
 

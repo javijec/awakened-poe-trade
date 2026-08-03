@@ -1,4 +1,4 @@
-import type { HostState, MainToRendererEvent, RendererToMainEvent } from '../../ipc/types'
+import type { HostState, MainToRendererEvent, RendererToMainEvent } from '@awakened/ipc/types'
 
 declare global {
   interface Window {

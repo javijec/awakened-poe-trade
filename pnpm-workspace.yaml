@@ -1,4 +1,5 @@
 packages:
+  - ipc
   - main
   - renderer
 allowBuilds:

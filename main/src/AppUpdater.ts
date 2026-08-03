@@ -1,6 +1,6 @@
 import { autoUpdater } from 'electron-updater'
 import type { ServerEvents } from './server'
-import type { UpdateInfo } from '../../ipc/types'
+import type { UpdateInfo } from '@awakened/ipc/types'
 
 export class AppUpdater {
   private _checkedAtStartup = false
