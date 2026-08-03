@@ -82,6 +82,9 @@ export type IpcEvent =
 export type IpcEventPayload<Name extends IpcEvent['name'], T extends IpcEvent = IpcEvent> =
   T extends { name: Name, payload: infer P } ? P : never
 
+export type RendererToMainEvent = Extract<IpcEvent, { name: `CLIENT->MAIN::${string}` | `OVERLAY->MAIN::${string}` }>
+export type MainToRendererEvent = Exclude<IpcEvent, RendererToMainEvent>
+
 type IpcOverlayAttached =
   Event<'MAIN->OVERLAY::overlay-attached'>
 

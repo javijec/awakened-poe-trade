@@ -3,7 +3,7 @@
 import { app } from 'electron'
 import { uIOhook } from 'uiohook-napi'
 import os from 'node:os'
-import { startServer, eventPipe, server } from './server'
+import { attachElectronClient, startServer, eventPipe, server } from './server'
 import { Logger } from './RemoteLogger'
 import { GameWindow } from './windowing/GameWindow'
 import { OverlayWindow } from './windowing/OverlayWindow'
@@ -52,6 +52,7 @@ app.on('ready', async () => {
       const port = await startServer(appUpdater, logger)
       // TODO: move up (currently crashes)
       logger.write(`info ${os.type()} ${os.release} / v${app.getVersion()}`)
+      overlay.webContents && attachElectronClient(overlay.webContents)
       overlay.loadAppPage(port)
       tray.serverPort = port
     },

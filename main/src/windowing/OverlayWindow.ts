@@ -12,6 +12,8 @@ export class OverlayWindow {
   private overlayKey: string = 'Shift + Space'
   private isOverlayKeyUsed = false
 
+  get webContents () { return this.window?.webContents }
+
   constructor (
     private server: ServerEvents,
     private logger: Logger,
@@ -34,6 +36,8 @@ export class OverlayWindow {
       height: 600,
       webPreferences: {
         allowRunningInsecureContent: false,
+        contextIsolation: true,
+        preload: path.join(__dirname, 'preload.js'),
         webviewTag: true,
         spellcheck: false
       }

@@ -4,8 +4,9 @@ import { createServer } from 'http'
 import { EventEmitter } from 'events'
 import * as fs from 'fs'
 import * as path from 'path'
-import { app } from 'electron'
+import { app, ipcMain, type WebContents } from 'electron'
 import { IpcEvent, IpcEventPayload, HostState } from '../../ipc/types'
+import { isRendererToMainEvent } from '../../ipc/validation'
 import { ConfigStore } from './host-files/ConfigStore'
 import { addFileUploadRoutes } from './host-files/file-uploads'
 import type { AppUpdater } from './AppUpdater'
@@ -14,6 +15,8 @@ import type { Logger } from './RemoteLogger'
 export const server = createServer()
 const websocketServer = new WebSocketServer({ noServer: true })
 let lastActiveClient: WebSocket
+const electronClients = new Set<WebContents>()
+let lastActiveElectron: WebContents | undefined
 
 addFileUploadRoutes(server)
 
@@ -48,13 +51,24 @@ export function sendEventTo (
   event: IpcEvent
 ) {
   const msg = JSON.stringify(event)
+  for (const client of electronClients) {
+    if (!client.isDestroyed()) client.send('awakened:event', event)
+  }
   if (target === 'broadcast') {
     for (const client of websocketServer.clients) {
       client.send(msg)
     }
+  } else if (lastActiveElectron && !lastActiveElectron.isDestroyed()) {
+    lastActiveElectron.send('awakened:event', event)
   } else {
     lastActiveClient.send(msg)
   }
+}
+
+export function attachElectronClient (contents: WebContents) {
+  electronClients.add(contents)
+  contents.once('destroyed', () => electronClients.delete(contents))
+  lastActiveElectron = contents
 }
 
 export interface ServerEvents {
@@ -81,10 +95,27 @@ export async function startServer (
 ): Promise<number> {
   const configStore = new ConfigStore(eventPipe)
 
+  ipcMain.on('awakened:event', (event, message: unknown) => {
+    if (!isRendererToMainEvent(message)) return
+    lastActiveElectron = event.sender
+    evBus.emit(message.name, message.payload)
+  })
+  ipcMain.handle('awakened:get-host-state', async (): Promise<HostState> => ({
+    version: app.getVersion(),
+    updater: appUpdater.info,
+    contents: await configStore.load()
+  }))
+
   websocketServer.on('connection', (socket) => {
     lastActiveClient = socket
     socket.on('message', (bytes) => {
-      const event = JSON.parse(bytes.toString('utf-8')) as IpcEvent
+      let event: unknown
+      try {
+        event = JSON.parse(bytes.toString('utf-8'))
+      } catch {
+        return
+      }
+      if (!isRendererToMainEvent(event)) return
       if (event.name === 'CLIENT->MAIN::used-recently') {
         lastActiveClient = socket
       }

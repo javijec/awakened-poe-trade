@@ -25,6 +25,15 @@ const visionBuild = await esbuild.build({
   outfile: 'dist/vision.js'
 })
 
+await esbuild.build({
+  entryPoints: ['src/preload.ts'],
+  bundle: true,
+  minify: !isDev,
+  platform: 'node',
+  external: ['electron'],
+  outfile: 'dist/preload.js'
+})
+
 const mainContext = await esbuild.context({
   entryPoints: ['src/main.ts'],
   bundle: true,

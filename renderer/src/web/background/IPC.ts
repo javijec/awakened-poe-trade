@@ -1,10 +1,11 @@
-import type { IpcEvent, IpcEventPayload, UpdateInfo, HostState } from '@ipc/types'
+import type { IpcEvent, IpcEventPayload, UpdateInfo, HostState, MainToRendererEvent, RendererToMainEvent } from '@ipc/types'
 import { shallowRef } from 'vue'
 import Sockette from 'sockette'
 
 class HostTransport {
   private evBus = new EventTarget()
   private socket!: Sockette
+  private removeNativeListener?: () => void
   logs = shallowRef('')
   version = shallowRef('0.0.00000')
   updateInfo = shallowRef<UpdateInfo>({ state: 'initial' })
@@ -16,6 +17,13 @@ class HostTransport {
     this.onEvent('MAIN->CLIENT::updater-state', (info) => {
       this.updateInfo.value = info
     })
+    if (window.awakenedNative) {
+      this.removeNativeListener = window.awakenedNative.onEvent((event: MainToRendererEvent) => {
+        this.selfDispatch(event)
+      })
+      return
+    }
+
     await new Promise((resolve) => {
       const protocol = (window.location.protocol === 'https:') ? 'wss:' : 'ws:'
       this.socket = new Sockette(`${protocol}//${window.location.host}/events`, {
@@ -33,8 +41,12 @@ class HostTransport {
     }))
   }
 
-  sendEvent (event: IpcEvent) {
-    this.socket.send(JSON.stringify(event))
+  sendEvent (event: RendererToMainEvent) {
+    if (window.awakenedNative) {
+      window.awakenedNative.send(event)
+    } else {
+      this.socket.send(JSON.stringify(event))
+    }
   }
 
   onEvent<Name extends IpcEvent['name']> (
@@ -53,6 +65,12 @@ class HostTransport {
   }
 
   async getConfig (): Promise<string | null> {
+    if (window.awakenedNative) {
+      const config = await window.awakenedNative.getHostState()
+      this.version.value = config.version
+      this.updateInfo.value = config.updater
+      return config.contents
+    }
     const response = await fetch('/config')
     const config = await response.json() as HostState
     // TODO: refactor this
