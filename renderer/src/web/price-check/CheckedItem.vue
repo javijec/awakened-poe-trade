@@ -105,6 +105,10 @@ export default defineComponent({
 
     // TradeListing.vue OR TradeBulk.vue
     const tradeService = ref<{ execSearch(): void } | null>(null)
+    // The result component is lazy-loaded. Keep a pending request until its
+    // instance exists, otherwise the first automatic search can be missed.
+    let requestedSearch = 0
+    let dispatchedSearch = 0
     // FiltersBlock.vue
     const filtersComponent = ref<ComponentPublicInstance>(null!)
 
@@ -146,18 +150,32 @@ export default defineComponent({
       finishPriceCheckProfile(props.performanceProfileId)
     }, { immediate: true })
 
+    function requestSearch () {
+      const revision = ++requestedSearch
+
+      // The child normally renders on the next tick; when it is still being
+      // imported, the tradeService watcher below dispatches this same request.
+      nextTick(() => {
+        if (revision === requestedSearch && doSearch.value && tradeService.value) {
+          tradeService.value.execSearch()
+          dispatchedSearch = revision
+        }
+      })
+    }
+
     watch(() => [props.item, doSearch.value], () => {
       if (doSearch.value === false) return
 
       tradeAPI.value = apiToSatisfySearch(props.item, itemStats.value, itemFilters.value)
-
-      // NOTE: child `trade-xxx` component renders/receives props on nextTick
-      nextTick(() => {
-        if (tradeService.value) {
-          tradeService.value.execSearch()
-        }
-      })
+      requestSearch()
     }, { deep: false, immediate: true })
+
+    watch(tradeService, (service) => {
+      if (service && doSearch.value && dispatchedSearch !== requestedSearch) {
+        service.execSearch()
+        dispatchedSearch = requestedSearch
+      }
+    })
 
     watch(() => [props.item, doSearch.value, itemStats.value, itemFilters.value], (curr, prev) => {
       const cItem = curr[0]; const pItem = prev[0]

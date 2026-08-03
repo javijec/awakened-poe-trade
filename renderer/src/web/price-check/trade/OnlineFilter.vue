@@ -1,13 +1,13 @@
 <template>
   <ui-popover :delay="[80, null]" placement="bottom-start" boundary="#price-window">
     <template #target>
-      <button class="rounded mr-1 px-2 truncate" :class="showWarning() ? 'text-orange-500' : 'text-gray-500'">
+      <button :class="$style.trigger" :data-warning="showWarning()">
         <span><i class="fas fa-history"></i> {{ t(popoverLabelId()) }}</span>
         <span v-if="showLeagueName()">, {{ filters.trade.league }}</span>
       </button>
     </template>
     <template #content>
-      <div class="flex gap-x-8 p-2 bg-gray-800 text-gray-400">
+      <div :class="$style.content">
         <div class="flex flex-col gap-y-1">
           <div class="mb-1">
             <ui-toggle
@@ -103,3 +103,31 @@ export default defineComponent({
   }
 })
 </script>
+
+<style lang="postcss" module>
+.trigger {
+  margin-right: .25rem;
+  padding: .125rem .5rem;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  color: rgba(225, 215, 190, .7);
+
+  &:hover {
+    border-color: rgba(163, 141, 109, .32);
+    background: rgba(163, 141, 109, .08);
+    color: #e8d8b9;
+  }
+
+  &[data-warning='true'] { color: #d6a558; }
+}
+
+.content {
+  display: flex;
+  gap: 2rem;
+  padding: .6rem;
+  color: rgba(225, 215, 190, .9);
+
+  :global(button) { color: inherit; }
+  :global(button:hover) { color: #e8d8b9; }
+}
+</style>

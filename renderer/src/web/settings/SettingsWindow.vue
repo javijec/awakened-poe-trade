@@ -50,10 +50,10 @@ function lazySettingsComponent (name: string, loader: () => Promise<Component>) 
 const SettingsHotkeys = lazySettingsComponent('hotkeys', () => import('./hotkeys.vue'))
 const SettingsChat = lazySettingsComponent('chat', () => import('./chat.vue'))
 const SettingsGeneral = lazySettingsComponent('general', () => import('./general.vue'))
-const SettingsPricecheck = lazySettingsComponent('settings-price-check', () => import('../price-check/settings-price-check.vue'))
-const SettingsItemcheck = lazySettingsComponent('settings-item-check', () => import('../item-check/settings-item-check.vue'))
+const SettingsPricecheck = lazySettingsComponent('price_check.name', () => import('../price-check/settings-price-check.vue'))
+const SettingsItemcheck = lazySettingsComponent('item.info', () => import('../item-check/settings-item-check.vue'))
 const SettingsDebug = lazySettingsComponent('debug', () => import('./debug.vue'))
-const SettingsMaps = lazySettingsComponent('settings-maps', () => import('../map-check/settings-maps.vue'))
+const SettingsMaps = lazySettingsComponent('map_check.name', () => import('../map-check/settings-maps.vue'))
 const SettingsStashSearch = lazySettingsComponent('stash-search-editor', () => import('../stash-search/stash-search-editor.vue'))
 const SettingsStopwatch = lazySettingsComponent('settings-stopwatch', () => import('../stopwatch/settings-stopwatch.vue'))
 const SettingsItemSearch = lazySettingsComponent('settings-item-search', () => import('../item-search/settings-item-search.vue'))
@@ -196,9 +196,9 @@ function menuIcon (component: Component) {
     case 'hotkeys': return 'fa-keyboard'
     case 'chat': return 'fa-comment'
     case 'general': return 'fa-sliders-h'
-    case 'settings-price-check': return 'fa-search-dollar'
-    case 'settings-maps': return 'fa-map'
-    case 'settings-item-check': return 'fa-scroll'
+    case 'price_check.name': return 'fa-search-dollar'
+    case 'map_check.name': return 'fa-map'
+    case 'item.info': return 'fa-scroll'
     case 'stash-search-editor': return 'fa-archive'
     case 'settings-stopwatch': return 'fa-stopwatch'
     case 'settings-item-search': return 'fa-search'
