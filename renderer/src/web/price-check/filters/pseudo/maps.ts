@@ -23,8 +23,9 @@ export function mapProps (ctx: FiltersCreationContext): void {
 
   const hasMoreDrops = Boolean(item.map.moreMaps || item.map.moreScarabs || item.map.moreCurrency || item.map.moreDivCards)
 
-  if (!item.isCorrupted && !hasMoreDrops && item.info.refName !== 'Nightmare Map') return
-
+  // Quantity, rarity and pack size are valid map filters even when the map
+  // does not have one of the special "more drops" modifiers. Returning here
+  // hid every selectable modifier on ordinary three-mod maps.
   if (item.map.itemQuantity) {
     ctx.filters.push(propToFilter({
       ref: 'Item Quantity: +#%',
