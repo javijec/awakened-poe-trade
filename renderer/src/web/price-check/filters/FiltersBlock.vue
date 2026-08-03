@@ -82,12 +82,12 @@
         <input type="submit" class="hidden" />
       </form>
       <div class="flex gap-x-4">
-        <button @click="statsVisibility.disabled = !statsVisibility.disabled" class="btn px-2 py-1 leading-none rounded-b w-40"
-          >{{ t('filters.collapse') }} <i class="fas fa-chevron-up pl-1 text-xs text-gray-600"></i></button>
+        <button @click="statsVisibility.disabled = !statsVisibility.disabled" class="btn px-2 py-1 leading-none rounded-b w-40 text-yellow-100"
+          >{{ t('filters.collapse') }} <i class="fas fa-chevron-up pl-1 text-xs text-yellow-700"></i></button>
         <ui-toggle v-if="filteredStats.length !== stats.length"
-          v-model="showHidden" class="text-gray-400 pt-2">{{ t('filters.hidden_toggle') }}</ui-toggle>
+          v-model="showHidden" class="text-yellow-100 pt-2">{{ t('filters.hidden_toggle') }}</ui-toggle>
         <ui-toggle
-          v-model="showFilterSources" class="ml-auto text-gray-400 pt-2">{{ t('filters.mods_toggle') }}</ui-toggle>
+          v-model="showFilterSources" class="ml-auto text-yellow-100 pt-2">{{ t('filters.mods_toggle') }}</ui-toggle>
       </div>
     </div>
   </div>

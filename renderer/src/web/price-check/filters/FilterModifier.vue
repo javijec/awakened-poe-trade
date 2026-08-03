@@ -10,7 +10,7 @@
         <button class="flex items-baseline text-left min-w-0" @click="toggleFilter" type="button">
           <i class="w-5" :class="{
             'far fa-square text-gray-500': isDisabled,
-            'fas fa-check-square': !isDisabled
+            'fas fa-check-square text-yellow-200': !isDisabled
           }"></i>
           <div class="search-text flex-1 mr-1 relative flex min-w-0" style="line-height: 1rem;">
             <span class="truncate"><item-modifier-text :text="text" :roll="roll?.value" /></span>
@@ -235,7 +235,7 @@ export default defineComponent({
 
 .rollInput {
   background: rgba(238, 238, 238, .035);
-  color: #eee;
+  color: #e8d8b9;
   @apply text-center;
   @apply w-12;
   @apply px-1;
@@ -245,7 +245,7 @@ export default defineComponent({
   &:last-child { @apply rounded-r; }
 
   &::placeholder {
-    color: rgba(238, 238, 238, .34);
+    color: rgba(196, 177, 140, .58);
     font-size: 0.8125rem;
   }
 
@@ -357,7 +357,9 @@ export default defineComponent({
 .tag-scourge {
   @apply bg-orange-600 text-white; }
 .tag-foulborn {
-  @apply bg-pink-700 text-white; }
+  border: 1px solid rgba(163, 141, 109, .4);
+  background: rgba(107, 42, 48, .44);
+  color: #e8d8b9; }
 .tag-vestigial {
   @apply bg-purple-600 text-purple-100; }
 .tag-enchant {
@@ -381,7 +383,8 @@ export default defineComponent({
   }
 
   .search-text:hover & {
-    @apply bg-gray-700;
+    background: #151515;
+    box-shadow: 0 0 0 1px rgba(163, 141, 109, .25);
   }
 }
 </style>
