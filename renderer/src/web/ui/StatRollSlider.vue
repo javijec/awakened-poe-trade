@@ -1,7 +1,6 @@
 <template>
-  <div class="flex justify-between bg-gray-700 rounded relative p-0.5 items-center h-5"
+  <div :class="[$style.root, $style[state.mode]]"
     ref="rootEl"
-    :class="$style[state.mode]"
     @mousedown="handleMousedown">
     <span :class="[$style.bound, { [$style.inclusive]: state.minInclusive }]">{{ bounds.min }}</span>
     <div v-if="state.mode !== 'none'"
@@ -113,7 +112,7 @@ export default defineComponent({
 .tick {
   position: absolute;
   @apply w-0.5;
-  background: linear-gradient(to bottom, #000 10%, transparent 30%, transparent 70%, #000 90%);
+  background: linear-gradient(to bottom, transparent 8%, rgba(196, 177, 140, .9) 28%, rgba(196, 177, 140, .9) 72%, transparent 92%);
   height: 100%;
   pointer-events: none;
 }
@@ -130,30 +129,30 @@ export default defineComponent({
   .min & {
     width: calc(100% - var(--left));
     right: 0;
-    background-image: linear-gradient(to right, transparent calc(-1 * var(--left) - 5%), theme('colors.gray.400') 80%);
+    background-image: linear-gradient(to right, transparent calc(-1 * var(--left) - 5%), rgba(163, 141, 109, .74) 80%);
   }
 
   .max & {
     width: calc(100% - var(--right));
     left: 0;
-    background-image: linear-gradient(to left, transparent calc(-1 * var(--right) - 5%), theme('colors.gray.400') 80%);
+    background-image: linear-gradient(to left, transparent calc(-1 * var(--right) - 5%), rgba(163, 141, 109, .74) 80%);
   }
 
   .range & {
     left: var(--left);
     right: var(--right);
-    background-color: theme('colors.gray.400');
+    background-color: rgba(163, 141, 109, .74);
   }
 }
 
 .bound {
   line-height: none;
   z-index: 1;
-  @apply text-gray-500;
+  color: rgba(238, 238, 238, .46);
   pointer-events: none;
   user-select: none;
 
-  &.inclusive { @apply text-black; }
+  &.inclusive { color: #f1e6d1; }
 
   &:first-child { @apply pl-1; }
   &:last-child { @apply pr-1; }
@@ -161,14 +160,29 @@ export default defineComponent({
 
 .popup {
   position: absolute;
-  @apply bg-blue-600;
   @apply px-1 mb-1;
-  @apply rounded;
+  border: 1px solid rgba(163, 141, 109, .55);
+  border-radius: 3px;
+  background: #0d0d0d;
+  color: #f1e6d1;
   bottom: 100%;
   min-width: 1.8rem;
   text-align: center;
 
   left: calc(var(--left) - 0.8rem);
   right: calc(var(--right) - 0.8rem);
+}
+
+.root {
+  position: relative;
+  display: flex;
+  height: 1.25rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: .125rem;
+  border: 1px solid rgba(238, 238, 238, .12);
+  border-radius: 3px;
+  background: rgba(238, 238, 238, .035);
+  box-shadow: inset 0 1px 0 rgba(0, 0, 0, .4);
 }
 </style>

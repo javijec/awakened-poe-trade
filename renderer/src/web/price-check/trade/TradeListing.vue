@@ -45,8 +45,8 @@
         </thead>
         <tbody style="overflow: scroll;">
           <template v-for="(result, idx) in groupedResults">
-            <tr v-if="!result" :key="idx">
-              <td colspan="100" class="text-transparent">***</td>
+            <tr v-if="!result" :key="idx" :class="$style.skeleton">
+              <td colspan="100"><span /></td>
             </tr>
             <tr v-else :key="result.id" :class="$style.resultRow"
               v-memo="[result, result.listedTimes, showSeller, item.stackSize, filters.itemLevel, filters.quality, item.category]">
@@ -272,12 +272,12 @@ export default defineComponent({
 <style lang="postcss" module>
 .tableHeading {
   @apply sticky top-0;
-  @apply bg-gray-800;
+  background: #0d0d0d;
   @apply p-0 m-0;
   white-space: nowrap;
 
   & > div {
-    @apply border-b border-gray-700;
+    border-bottom: 1px solid rgba(163, 141, 109, .2);
   }
 }
 
@@ -309,6 +309,20 @@ export default defineComponent({
 .resultRow {
   content-visibility: auto;
   contain-intrinsic-size: 1.75rem;
+}
+
+.skeleton td {
+  height: 1.75rem;
+  padding: 0 .5rem;
+}
+
+.skeleton span {
+  display: block;
+  height: .5rem;
+  width: 58%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(238, 238, 238, .035), rgba(163, 141, 109, .1), rgba(238, 238, 238, .035));
+  opacity: .55;
 }
 
 .stashIcon {

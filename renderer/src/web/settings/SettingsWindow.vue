@@ -268,7 +268,9 @@ function menuIcon (component: Component) {
   max-width: 50rem;
   max-height: 38rem;
   overflow: hidden;
-  @apply bg-gray-800;
+  background: var(--kt-bg);
+  border: 1px solid rgba(163, 141, 109, .24);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .5);
   @apply rounded-b;
   &:global {
     animation-name: slideInDown;
@@ -282,6 +284,9 @@ function menuIcon (component: Component) {
   line-height: 1;
   @apply text-gray-500;
   @apply rounded-l;
+  border-left: 2px solid transparent;
+  font-family: FontinSmallCaps, FrizQuadrataC;
+  letter-spacing: .04em;
 
   &:hover {
     @apply text-yellow-100 bg-gray-800;
@@ -289,7 +294,8 @@ function menuIcon (component: Component) {
 
   &.active {
     @apply text-yellow-100;
-    @apply bg-gray-800 border-l-2 border-yellow-700;
+    background: rgba(238, 238, 238, .04);
+    border-left-color: #a38d6d;
   }
 }
 

@@ -228,46 +228,48 @@ export default defineComponent({
 <style lang="postcss" module>
 .filter {
   @apply py-2;
-  @apply border-b border-gray-700;
+  border-bottom: 1px solid rgba(238, 238, 238, .08);
   display: flex;
   position: relative;
 }
 
 .rollInput {
-  @apply bg-gray-900;
-  @apply text-gray-300;
+  background: rgba(238, 238, 238, .035);
+  color: #eee;
   @apply text-center;
   @apply w-12;
   @apply px-1;
-  @apply border border-transparent;
+  border: 1px solid rgba(238, 238, 238, .12);
 
   &:first-child { @apply rounded-l; }
   &:last-child { @apply rounded-r; }
 
   &::placeholder {
-    @apply text-gray-700;
+    color: rgba(238, 238, 238, .34);
     font-size: 0.8125rem;
   }
 
   /* &:not(:placeholder-shown) { @apply border-gray-600; } */
 
   &:focus {
-    @apply border-gray-500;
+    border-color: rgba(163, 141, 109, .72);
+    box-shadow: 0 0 0 2px rgba(163, 141, 109, .12);
     cursor: none;
   }
 }
 
 .qualityLabel {
-  @apply text-gray-500;
-  @apply border border-gray-700;
-  @apply rounded;
+  color: rgba(196, 177, 140, .88);
+  border: 1px solid rgba(163, 141, 109, .3);
+  border-radius: 3px;
+  background: rgba(163, 141, 109, .07);
   @apply px-2;
   text-align: center;
 }
 
 .mods {
-  @apply border-b-4 border-gray-500;
-  background: linear-gradient(to bottom, theme('colors.gray.800') , theme('colors.gray.900') );
+  border-bottom: 2px solid rgba(163, 141, 109, .35);
+  background: #0d0d0d;
   @apply -mx-4 px-4;
   position: absolute;
   top: 100%;

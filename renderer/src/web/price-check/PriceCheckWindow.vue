@@ -27,7 +27,7 @@
         <i v-else-if="xchgRateLoading()" class="fas fa-dna fa-spin px-2" />
         <div v-else class="w-8" />
       </AppTitleBar>
-      <div class="grow layout-column min-h-0 bg-gray-800">
+      <div class="grow layout-column min-h-0 bg-black" style="background: var(--kt-bg);">
         <background-info />
         <check-position-circle v-if="showCheckPos"
           :position="checkPosition" style="z-index: -1;" />
@@ -57,7 +57,7 @@
             <button class="btn whitespace-nowrap" @click="openLeagueSelection">{{ t('price_check.select_league') }}</button>
           </div>
         </ui-panel>
-        <div v-if="isBrowserShown" class="bg-gray-900 px-6 py-2 truncate">
+        <div v-if="isBrowserShown" class="px-6 py-2 truncate" style="background: var(--kt-surface); border-top: 1px solid rgba(163, 141, 109, .18);">
           <i18n-t keypath="app.toggle_browser_hint" tag="div">
             <span class="bg-gray-400 text-gray-900 rounded px-1">{{ overlayKey }}</span>
           </i18n-t>

@@ -37,15 +37,18 @@ function toggle () {
 
 <style lang="postcss" module>
 .btn {
-  @apply bg-gray-900 rounded;
-  @apply border border-transparent;
+  background: rgba(238, 238, 238, .025);
+  border: 1px solid rgba(238, 238, 238, .1);
+  border-radius: 3px;
   @apply pl-1 pr-2;
   line-height: 1.25rem;
   display: flex;
   align-items: center;
 
   &.active {
-    @apply border-gray-500;
+    border-color: rgba(163, 141, 109, .55);
+    color: #e8d8b9;
+    background: rgba(163, 141, 109, .08);
   }
 }
 </style>

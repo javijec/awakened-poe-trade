@@ -17,10 +17,24 @@ import OverlayWindow from './overlay/OverlayWindow.vue'
 @tailwind utilities;
 
 .table-stripped tbody tr:nth-child(odd) {
-  background: #353f52;
+  background: rgba(238, 238, 238, .035);
+}
+
+.table-stripped tbody tr:hover {
+  background: rgba(163, 141, 109, .1);
 }
 
 #app {
+  --kt-bg: #050505;
+  --kt-surface: #0d0d0d;
+  --kt-surface-raised: #151515;
+  --kt-text: #eeeeee;
+  --kt-muted: rgba(238, 238, 238, .58);
+  --kt-gold: #a38d6d;
+  --kt-blue: #284a7b;
+  color: var(--kt-text);
+  /* The Electron overlay sits on top of the game: only panels may be opaque. */
+  background: transparent;
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -40,15 +54,17 @@ import OverlayWindow from './overlay/OverlayWindow.vue'
 }
 
 ::-webkit-scrollbar {
-  width: 0.875rem;
+  width: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 0.375rem rgba(0,0,0,0.3);
+  background: rgba(238, 238, 238, .03);
 }
 
 ::-webkit-scrollbar-thumb {
-  -webkit-box-shadow: inset 0 0 0.375rem rgba(0,0,0,0.5);
+  background: rgba(163, 141, 109, .24);
+  border: 1px solid rgba(5, 5, 5, .35);
+  border-radius: 999px;
 }
 
 input[type=number]::-webkit-inner-spin-button,
@@ -57,15 +73,25 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .btn {
-  @apply bg-gray-700 border border-gray-600;
-  @apply px-2 py-1 text-gray-300;
-  @apply leading-none;
-  @apply rounded;
-  box-shadow: inset 0 1px 0 rgba(255, 211, 133, 0.08);
-  transition: color .15s ease, border-color .15s ease, background-color .15s ease;
-  &:hover { @apply bg-gray-600 border-yellow-700 text-yellow-100; }
-  &:focus-visible { @apply outline-none ring-1 ring-blue-400; }
+  min-height: 28px;
+  border: 1px solid rgba(238, 238, 238, .1);
+  border-radius: 2px;
+  background: rgba(238, 238, 238, .03);
+  color: rgba(238, 238, 238, .8);
+  font-family: FontinSmallCaps, FrizQuadrataC;
+  font-size: .75rem;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease, box-shadow .2s ease, transform .2s ease;
+  &:hover { background: rgba(238, 238, 238, .08); border-color: rgba(238, 238, 238, .3); color: #eee; }
+  &:active { transform: translateY(1px); }
+  &:focus-visible { @apply outline-none; border-color: rgba(163, 141, 109, .72); box-shadow: 0 0 0 1px rgba(163, 141, 109, .3), 0 0 0 3px rgba(163, 141, 109, .14); }
   &:disabled { @apply opacity-40 cursor-not-allowed; }
+}
+
+html,
+body {
+  background: transparent;
 }
 
 .btn-icon {
@@ -73,17 +99,27 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .poe-panel {
-  @apply bg-gray-800 border border-gray-700 rounded;
-  background-image: linear-gradient(135deg, rgba(212, 160, 69, .05), transparent 44%);
-  box-shadow: inset 0 1px 0 rgba(255, 223, 155, .06), 0 0 0 1px rgba(0, 0, 0, .18);
+  border: 1px solid rgba(163, 141, 109, .2);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(238, 238, 238, .035), rgba(238, 238, 238, .012)), radial-gradient(circle at top left, rgba(163, 141, 109, .1), transparent 48%), rgba(5, 5, 5, .78);
+  box-shadow: inset 0 1px 0 rgba(238, 238, 238, .04), 0 10px 28px rgba(0, 0, 0, .18);
 }
 
 .poe-section-title {
-  @apply text-xs uppercase tracking-wider text-yellow-600;
+  color: rgba(196, 177, 140, .84);
+  font-family: FontinSmallCaps, FrizQuadrataC;
+  font-size: .625rem;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
 }
 
 .poe-badge {
-  @apply inline-flex items-center rounded border border-gray-600 bg-gray-900 px-1.5 py-0.5 text-xs text-gray-300;
+  @apply inline-flex items-center px-1.5 py-0.5 text-xs;
+  border: 1px solid rgba(163, 141, 109, .26);
+  border-radius: 999px;
+  background: rgba(163, 141, 109, .08);
+  color: rgba(196, 177, 140, .94);
 }
 
 @keyframes ring {

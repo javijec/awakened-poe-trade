@@ -5,7 +5,8 @@
         <template v-for="widget in widgets" :key="widget.wmId">
           <button @click="toggle(widget)"
             :class="widget.wmWants === 'show' ? 'border-yellow-700 text-yellow-100' : 'border-gray-800 text-gray-400'"
-            class="bg-gray-800 rounded p-2 leading-none whitespace-nowrap border hover:border-yellow-700"
+            class="rounded p-2 leading-none whitespace-nowrap border"
+            style="background: rgba(238,238,238,.03); border-color: rgba(238,238,238,.1);"
           >
             <i v-if="widget.icon" class="fas align-bottom" :class="widget.icon" />
             <template v-if="widget.title">{{ widget.title }}</template>
@@ -13,7 +14,7 @@
         </template>
         <ui-popover>
           <template #target>
-            <button class="rounded text-gray-600 px-2 py-1 leading-none"><i class="fas fa-ellipsis-h"></i></button>
+            <button class="rounded px-2 py-1 leading-none" style="color: var(--kt-muted);"><i class="fas fa-ellipsis-h"></i></button>
           </template>
           <template #content>
             <div class="flex flex-col justify-center text-base">
@@ -29,7 +30,8 @@
         <ui-toggle v-model="config.alwaysShow">{{ t(':always_show') }}</ui-toggle>
       </div>
       <div v-else class="px-1 pb-1">
-        <textarea class="px-2 py-1.5 bg-gray-900 border border-gray-700 rounded resize-none block focus:border-blue-400 outline-none"
+        <textarea class="px-2 py-1.5 rounded resize-none block outline-none"
+          style="background: rgba(238,238,238,.03); border: 1px solid rgba(238,238,238,.1); color: var(--kt-text);"
           rows="1" spellcheck="false"
           :placeholder="t(':price_check')" @input="handleItemPaste"></textarea>
       </div>

@@ -265,8 +265,10 @@ export default defineComponent({
 
 .actionsPanel {
   @apply py-1;
-  color: #fff;
-  background: rgba(0,0,0, 0.4);
+  color: rgba(238, 238, 238, .8);
+  background: rgba(5, 5, 5, .92);
+  border: 1px solid rgba(163, 141, 109, .25);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, .4);
   display: flex;
   flex-direction: column;
   @apply rounded;
@@ -278,11 +280,13 @@ export default defineComponent({
   white-space: nowrap;
 
   &:hover {
-    background: rgba(255,255,255, 0.15);
+    color: #eee;
+    background: rgba(238,238,238, .08);
   }
 
   &.active {
-    background: rgba(0,0,0, 0.6);
+    color: #c4b18c;
+    background: rgba(163, 141, 109, .13);
   }
 
   &.removable {
@@ -320,9 +324,9 @@ export default defineComponent({
 
 <style lang="postcss">
 .widget-default-style {
-  @apply rounded;
-  @apply bg-gray-900;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.75),
-              0 1px 2px 0 rgba(0, 0, 0, 0.75);
+  border: 1px solid rgba(163, 141, 109, .2);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(238, 238, 238, .035), rgba(238, 238, 238, .012)), #050505;
+  box-shadow: inset 0 1px 0 rgba(238, 238, 238, .04), 0 10px 28px rgba(0, 0, 0, .3);
 }
 </style>

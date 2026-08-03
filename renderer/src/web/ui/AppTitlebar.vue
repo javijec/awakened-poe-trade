@@ -19,24 +19,28 @@ const emit = defineEmits<{
 
 <style lang="postcss" module>
 .titlebar {
-  @apply bg-gray-900 text-gray-600;
+  color: rgba(238, 238, 238, .58);
+  background: #0d0d0d;
+  border-bottom: 1px solid rgba(163, 141, 109, .18);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 1.5rem;
-  line-height: 1.5rem;
+  height: 2rem;
+  line-height: 2rem;
 
   button {
-    @apply px-2 pt-px;
+    @apply px-3;
+    font-family: FontinSmallCaps, FrizQuadrataC;
+    letter-spacing: .04em;
 
     &:hover {
-      @apply text-gray-400;
-      background: linear-gradient(to top, theme('colors.gray.900'), theme('colors.gray.700'))
+      color: #eee;
+      background: rgba(238, 238, 238, .06);
     }
 
     &.close:hover {
-      @apply text-red-200;
-      background: theme('colors.red.500');
+      color: #eee;
+      background: rgba(109, 28, 28, .72);
     }
   }
 }
