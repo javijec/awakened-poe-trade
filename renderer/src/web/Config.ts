@@ -445,8 +445,10 @@ function getConfigForHost (): HostConfig {
   if (priceCheck.hotkey) {
     actions.push({
       shortcut: `${priceCheck.hotkeyHold} + ${priceCheck.hotkey}`,
-      action: { type: 'copy-item', target: 'price-check', focusOverlay: false },
-      keepModKeys: true
+      // Global shortcuts can swallow the modifier key-up event. Releasing the
+      // full shortcut lets the copy macro send Ctrl+C as a complete key cycle,
+      // so PoE does not keep the item tooltip in its "show advanced mods" state.
+      action: { type: 'copy-item', target: 'price-check', focusOverlay: false }
     })
   }
   if (priceCheck.hotkeyLocked) {
